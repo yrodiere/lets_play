@@ -20,4 +20,15 @@ public final class Tile extends Observable implements GameData {
 		
 	}
 
+	void setPiece(Piece newPiece) {
+		//TODO
+	}
+	
+	void setSelected(boolean selected) {
+		//TODO
+	}
+	
+	void setReachable(boolean selected) {
+		//TODO
+	}
 }
