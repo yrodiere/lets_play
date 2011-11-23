@@ -1,14 +1,12 @@
 package implementation.noughts_crosses.logic;
 
-import implementation.draughts.logic.Rules;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import data.Board;
 import data.Coordinates;
-import data.Coordinates.DirectionOnBoard;
 import data.Piece;
+import data.Coordinates.DirectionOnBoard;
 import data.Player;
 import data.Tile;
 
@@ -19,7 +17,7 @@ public class Game extends logic.Game {
 	 *  -----------------------------------------------Attributes------------------------------------------------------------
 	 */	
 	
-	List<List<Tile>> everyPossibleLigne = new ArrayList();
+	List<List<Tile>> everyPossibleLigne = new ArrayList<List<Tile>>();
 	
 	/*
 	 *  -----------------------------------------------Methodes------------------------------------------------------------
@@ -27,7 +25,7 @@ public class Game extends logic.Game {
 
 	public Game(Rules myRules, Board myBoard, List<Player> myPlayers) throws Exception {
 		super(myRules, myBoard, myPlayers);
-		// TODO Auto-generated constructor stub
+
 		init();
 	}
 
@@ -50,15 +48,69 @@ public class Game extends logic.Game {
 
 	@Override
 	protected EndTurnReturnCode specificEndTurn(Player actor) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Player otherPlayer = players.get(0);
+		
+		if(otherPlayer == actor){
+			otherPlayer = players.get(1);
+		}
+		
+		boolean boardFull = true;
+		
+		for(List<Tile> ligne : everyPossibleLigne){
+			
+			int nbActorPiecesAligned = 0;
+		
+			for(Tile tile : ligne){
+				Piece piece = tile.getPiece();
+				
+				if(piece == null){
+					boardFull = false;
+				}else{
+					if(piece.getPlayer() == actor){
+						nbActorPiecesAligned++;
+					}
+				}
+			}
+			
+			if(nbActorPiecesAligned == rules.getBoardColumnCount()){
+				actor.win();
+				otherPlayer.loose();
+				return EndTurnReturnCode.SUCCESS;
+			}
+		}
+		
+		if(boardFull){
+			actor.draw();
+			otherPlayer.draw();
+		}else{
+			actor.endTurn();
+			otherPlayer.endTurn();
+		}
+		
+		return EndTurnReturnCode.SUCCESS;
 	}
 
 	@Override
 	protected void init() {
 		Rules myRules = (Rules) rules;
 		
-		// TODO Init piece
+		int nbTiles = myRules.getBoardRowCount()*myRules.getBoardColumnCount();
+		
+		List<Piece> player1Pieces = new ArrayList<Piece>();
+		
+		List<Piece> player2Pieces = new ArrayList<Piece>();
+		
+		for(int i = 0 ; i < nbTiles ; i++ ){	
+			
+			Piece piece = initPiece();
+			
+			if(i%2 == 0){
+				player1Pieces.add(piece);
+			}else{
+				player2Pieces.add(piece);
+			}
+		}		
 		
 		for(int r = 0 ; r < myRules.getBoardRowCount() ; r++ ){
 			
@@ -90,5 +142,17 @@ public class Game extends logic.Game {
 		
 		everyPossibleLigne.add(diagLigne1);
 		everyPossibleLigne.add(diagLigne2);
+	}
+	
+	
+protected Piece initPiece(){	
+	
+		Piece piece = new Piece();
+		
+		MoveStrategy ms = new MoveStrategy();
+		
+		piece.setMoveStrategy(ms);
+	
+		return piece;	
 	}
 }

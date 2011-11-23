@@ -24,6 +24,10 @@ public final class Piece extends Observable implements GameData {
 			return null;
 		}
 	}
+	
+	public Piece() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public Piece(Tile tile) {
 		// TODO Auto-generated constructor stub

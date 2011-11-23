@@ -29,6 +29,7 @@ public abstract class Game {
 	/*
 	 *  -----------------------------------------------Attributes------------------------------------------------------------
 	 */
+	
 	protected boolean currentPlayerHasPlayed = false;
 	
 	protected Rules rules;
@@ -64,7 +65,9 @@ public abstract class Game {
 	}
 	
 	/**
-	 *  
+	 *  @param actor Player who led the selection attempt.
+	 *  @param location Coordinates where the player acted on.
+	 *  @return code specifying the result of the select attempt. 
 	 */
 	public SelectionReturnCode select(Player actor, Coordinates location){
 		
@@ -76,7 +79,8 @@ public abstract class Game {
 	}
 	
 	/**
-	 *  
+	 *  @param actor Player who led the end of the turn attempt.
+	 *  @return code specifying the result of the end of the turn attempt. 
 	 */
 	public EndTurnReturnCode endTurn(Player actor){
 		

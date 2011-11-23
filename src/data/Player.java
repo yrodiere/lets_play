@@ -6,6 +6,7 @@ import java.util.Observable;
 //TODO
 public final class Player extends Observable implements GameData {
 	public static enum PlayerStatus {/*TODO*/ PLAYING};
+	
 	public static final class PlayerModification {
 		//TODO
 	}
@@ -47,6 +48,11 @@ public final class Player extends Observable implements GameData {
 	}
 
 	public void loose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void draw() {
 		// TODO Auto-generated method stub
 		
 	}
