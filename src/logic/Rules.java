@@ -9,6 +9,8 @@ public abstract class Rules {
 	
 	protected int boardColumnCount;
 	
+	protected int nbPlayer;
+	
 	/*
 	 *  -----------------------------------------------Methodes------------------------------------------------------------
 	 */
@@ -19,5 +21,9 @@ public abstract class Rules {
 
 	public int getBoardColumnCount(){
 		return boardColumnCount;
+	}
+	
+	public int getNbPlayer(){
+		return nbPlayer;
 	}
 }

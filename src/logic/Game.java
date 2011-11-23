@@ -16,7 +16,7 @@ public abstract class Game {
 		MOVE_PENDING,
 		NOT_PLAYING,
 		INVALID_PIECE_SELECTION,
-		INVALID_TARGET_SLECTION;
+		INVALID_TARGET_SELECTION;
 	}
 	
 	public enum EndTurnReturnCode {
@@ -44,24 +44,36 @@ public abstract class Game {
 	 *  -----------------------------------------------Methodes------------------------------------------------------------
 	 */
 	
-	public Game(Rules myRules, Board myBoard, List<Player> myPlayers){
+	public Game(Rules myRules, Board myBoard, List<Player> myPlayers) throws Exception{
 		
 		rules = myRules;
 
 		board = myBoard;
 		
 		players = myPlayers;	
+		
+		if(myPlayers.size() != rules.getNbPlayer()){
+			throw new Exception("Two players required !");		
+		}else{
+			for(Player p : players){
+				if(p == null){
+					throw new Exception("Two players required !");		
+				}
+			}
+		}
 	}
 	
 	/**
 	 *  
 	 */
-	abstract public SelectionReturnCode select(Player actor, Coordinates location);
-	
-	/**
-	 *  
-	 */
-	abstract public void resetTurn(Player actor);
+	public SelectionReturnCode select(Player actor, Coordinates location){
+		
+		if(actor.getStatus() != PlayerStatus.PLAYING){
+			return SelectionReturnCode.NOT_PLAYING;
+		}
+		
+		return specificSelect(actor, location);
+	}
 	
 	/**
 	 *  
@@ -82,4 +94,6 @@ public abstract class Game {
 	abstract protected void init();	
 	
 	abstract protected EndTurnReturnCode specificEndTurn(Player actor);
+	
+	abstract protected SelectionReturnCode specificSelect(Player actor, Coordinates location);
 }

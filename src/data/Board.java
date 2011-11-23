@@ -14,5 +14,10 @@ public class Board implements GameData {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public Tile findTileAt(Coordinates coords){
+		// TODO
+		return null;
+	}
 
 }

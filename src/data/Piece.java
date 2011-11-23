@@ -25,6 +25,10 @@ public final class Piece extends Observable implements GameData {
 		}
 	}
 
+	public Piece(Tile tile) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void update(PieceModification updateDescription) {
 		// TODO
 	}

@@ -4,6 +4,15 @@ import java.util.Observable;
 
 //TODO
 public final class Tile extends Observable implements GameData {
+	/*
+	 *  -----------------------------------------------Attributes------------------------------------------------------------
+	 */
+	protected Piece piece;
+	
+	/*
+	 *  -----------------------------------------------Methodes------------------------------------------------------------
+	 */
+
 	public static final class TileModification {
 		//TODO
 	}
@@ -19,16 +28,25 @@ public final class Tile extends Observable implements GameData {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public Coordinates getCoordinates(){
+		// TODO
+		return null;
+	}
+	
+	public Piece getPiece() {
+		return piece;
+	}
 
-	void setPiece(Piece newPiece) {
+	public void setPiece(Piece newPiece) {
+		piece = newPiece;
+	}
+	
+	public void setSelected(boolean selected) {
 		//TODO
 	}
 	
-	void setSelected(boolean selected) {
-		//TODO
-	}
-	
-	void setReachable(boolean selected) {
+	public void setReachable(boolean selected) {
 		//TODO
 	}
 }

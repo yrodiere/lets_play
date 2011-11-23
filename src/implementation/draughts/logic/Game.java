@@ -1,46 +1,73 @@
 package implementation.draughts.logic;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import data.Board;
 import data.Coordinates;
 import data.Piece;
 import data.Player;
+import data.Tile;
 
 //TODO
 public class Game extends logic.Game {
-	
-	protected final int nbPlayers = 2;
-	
-	protected final int nbRowOfPieces = 3;
-
 	Game(Rules myRules, Board myBoard, List<Player> myPlayers) throws Exception {
-		super(myRules, myBoard, myPlayers);
-		
-		if(myPlayers.size() != nbPlayers || myPlayers.get(0) == null || myPlayers.get(1) == null ){
-			throw new Exception("Two players required !");		
-		}
+		super(myRules, myBoard, myPlayers);		
 		
 		init();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public SelectionReturnCode select(Player actor, Coordinates location) {
-		// TODO Auto-generated method stub
-		return null;
+	protected SelectionReturnCode specificSelect(Player actor, Coordinates location) {
+		
+		Tile selectedTile = board.findTileAt(location);
+		
+		if(selectedTile == null){		
+			return null;
+		}
+		
+		Piece piece = selectedTile.getPiece();
+		
+		if(piece != null){
+			
+			if(piece.getPlayer() == actor){
+				
+				resetTurn();
+				
+				if( piece.select() ){
+					selectedPiece = piece;
+					return SelectionReturnCode.SUCCESS;
+				}
+			}		
+			
+			return SelectionReturnCode.INVALID_PIECE_SELECTION;
+			
+		}else{
+			if(selectedPiece == null ){
+				return SelectionReturnCode.INVALID_PIECE_SELECTION;			
+			}
+			
+			if(selectedPiece.tryMove( selectedTile.getCoordinates() ) ){
+				
+				if(selectedPiece.select()){
+					return SelectionReturnCode.MOVE_PENDING;
+				}else{
+					return SelectionReturnCode.SUCCESS;
+				}	
+			}
+			
+			return SelectionReturnCode.INVALID_TARGET_SELECTION;
+		}
 	}
 
-	@Override
-	public void resetTurn(Player actor) {
-		// TODO Auto-generated method stub		
-	}
 
 	@Override
 	protected EndTurnReturnCode specificEndTurn(Player actor) {
 		
 		checkForPieceUpgrade(actor);
+		
+		selectedPiece = null;
 		
 		Player otherPlayer = players.get(0);
 		
@@ -71,12 +98,73 @@ public class Game extends logic.Game {
 
 	@Override
 	protected void init() {
-		// TODO Auto-generated method stub
+		Rules myRules = (Rules) rules;
 		
+		List<Piece> player1Pieces = new ArrayList<Piece>();
+		
+		List<Piece> player2Pieces = new ArrayList<Piece>();
+		
+		for(int c = 0 ; c < myRules.getBoardColumnCount() ; c++){
+		
+			for(int r = 0 ; r < myRules.getNbRowsOfPiece() ; r++){			
+				
+				Piece p1 = initPiece(r, c);
+				
+				if(p1 != null){
+					player1Pieces.add(p1);
+				}
+				
+				Piece p2 = initPiece( myRules.getBoardRowCount() - r, c );
+				
+				if(p1 != null){
+					player2Pieces.add(p2);
+				}
+			}			
+		}
+		
+		players.get(0).init(player1Pieces);
+		
+		players.get(1).init(player1Pieces);		
+	}
+	
+	protected Piece initPiece(int row, int column){
+		
+		Tile tile = board.findTileAt( new Coordinates(row,column) );
+		
+		Rules myRules = (Rules) rules;
+		
+		if(tile != null && myRules.isTileUsed(tile) ){
+			
+			Piece piece = new Piece(tile);
+			
+			MoveStrategy ms = new ManMoveStrategy();
+			
+			piece.setMoveStrategy(ms);
+		
+			return piece;
+		}
+		
+		return null;
 	}
 	
 	protected void checkForPieceUpgrade(Player actor){
-		// TODO
+		int lastRow = 0;
+		
+		if(actor == players.get(0)){
+			lastRow = rules.getBoardRowCount();
+		}
+		
+		if(selectedPiece.getCoordinates().getRow() == lastRow){
+			selectedPiece.setMoveStrategy(new KingMoveStrategy());
+		}
 	}
+	
 
+	protected void resetTurn() {
+		board.resetTurn();
+		
+		for(Player p : players){
+			p.resetTurn();
+		}
+	}
 }
