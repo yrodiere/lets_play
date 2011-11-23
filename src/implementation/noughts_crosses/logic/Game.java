@@ -55,6 +55,8 @@ public class Game extends logic.Game {
 			otherPlayer = players.get(1);
 		}
 		
+		selectedPiece = otherPlayer.findOffBoardPieces().get(0);
+		
 		boolean boardFull = true;
 		
 		for(List<Tile> ligne : everyPossibleLigne){
@@ -111,6 +113,8 @@ public class Game extends logic.Game {
 				player2Pieces.add(piece);
 			}
 		}		
+		
+		selectedPiece = player1Pieces.get(0);
 		
 		for(int r = 0 ; r < myRules.getBoardRowCount() ; r++ ){
 			
