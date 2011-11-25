@@ -1,5 +1,6 @@
 package data;
 
+import java.io.Serializable;
 import java.util.Observable;
 
 //TODO
@@ -13,7 +14,8 @@ public final class Tile extends Observable implements GameData {
 	 *  -----------------------------------------------Methodes------------------------------------------------------------
 	 */
 
-	public static final class TileModification {
+	public static final class TileModification implements Serializable {
+		private static final long serialVersionUID = 935932699665702904L;
 		//TODO
 	}
 
@@ -37,16 +39,31 @@ public final class Tile extends Observable implements GameData {
 	public Piece getPiece() {
 		return piece;
 	}
+	
+	public boolean isReachable() {
+		// TODO
+		return false;
+	}
+	
+	public boolean isSelected() {
+		// TODO
+		return false;
+	}
+	
+	public boolean isEmpty() {
+		//TODO: just return true if piece == null, false otherwise
+		return false;
+	}
 
-	public void setPiece(Piece newPiece) {
+	void setPiece(Piece newPiece) {
 		piece = newPiece;
 	}
 	
-	public void setSelected(boolean selected) {
+	void setSelected(boolean selected) {
 		//TODO
 	}
 	
-	public void setReachable(boolean selected) {
+	void setReachable(boolean selected) {
 		//TODO
 	}
 }

@@ -11,7 +11,7 @@ public class Rules extends logic.Rules {
 	
 	protected Coordinates initPieceStartPosition;
 	
-	Rules(){
+	public Rules(){
 		
 		boardColumnCount = 10;
 		

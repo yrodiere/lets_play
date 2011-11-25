@@ -104,12 +104,11 @@ public class Game extends logic.Game {
 		List<Piece> player2Pieces = new ArrayList<Piece>();
 		
 		for(int i = 0 ; i < nbTiles ; i++ ){	
-			
-			Piece piece = initPiece();
-			
 			if(i%2 == 0){
+				Piece piece = initPiece(players.get(0));
 				player1Pieces.add(piece);
 			}else{
+				Piece piece = initPiece(players.get(1));
 				player2Pieces.add(piece);
 			}
 		}		
@@ -149,11 +148,11 @@ public class Game extends logic.Game {
 	}
 	
 	
-protected Piece initPiece(){	
+protected Piece initPiece(Player owner){	
 	
-		Piece piece = new Piece();
+		Piece piece = new Piece(owner);
 		
-		MoveStrategy ms = new MoveStrategy();
+		MoveStrategy ms = new MoveStrategy(piece,board,(Rules)rules);
 		
 		piece.setMoveStrategy(ms);
 	
