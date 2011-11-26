@@ -16,10 +16,12 @@ public class MoveStrategyFactory implements logic.MoveStrategyFactory {
 	@Override
 	public logic.MoveStrategy createMoveStrategy(int typeHashCode,
 			Piece controlledPiece) {
-		if (PieceType.MAIN.hashCode() == typeHashCode) {
+		switch (PieceType.fromHash(typeHashCode)) {
+		case MAIN:
 			return new MoveStrategy(controlledPiece, board, rules);
-		} else {
-			throw new IllegalArgumentException("typeHashCode is invalid");
+		default:
+			throw new IllegalArgumentException(
+					"PieceType corresponding to typeHashCode is unknown");
 		}
 	}
 
