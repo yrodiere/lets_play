@@ -171,7 +171,7 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 	}
 
 	/**
-	 * Run through the path specified by "it", capturing pieces if necessary.
+	 * Runs through the path specified by "it", capturing pieces if necessary.
 	 * 
 	 * @param it
 	 *            An iterator specifying the path

@@ -5,6 +5,7 @@ import data.Coordinates;
 import data.GameData;
 import data.Piece;
 import data.Piece.PieceModification;
+import data.Piece.PieceModificationType;
 import data.PieceMover;
 
 public abstract class MoveStrategy extends PieceMover implements GameData {
@@ -19,7 +20,22 @@ public abstract class MoveStrategy extends PieceMover implements GameData {
 		this.strategyFactory = strategyFactory;
 	}
 
-	public void update(PieceModification updateDescription) {
+	/**
+	 * Applies the modifications described by <code>updateDescription</code>.<br>
+	 * Only handles update descriptions that:<br>
+	 * <li>have been created by a Piece <li>have the type
+	 * {@link PieceModificationType#MOVED_OFFBOARD},
+	 * {@link PieceModificationType#MOVED_ONBOARD},
+	 * {@link PieceModificationType#TURN_RESET} or
+	 * {@link PieceModificationType#CHANGED_STRATEGY}.
+	 * 
+	 * @param updateDescription
+	 *            The description of the modification
+	 * @throws IllegalArgumentException
+	 *             If <code>updateDescription</code> was not valid.
+	 */
+	public void update(PieceModification updateDescription)
+			throws IllegalArgumentException {
 		switch (updateDescription.getType()) {
 		case MOVED_OFFBOARD:
 			movePiece(controlledPiece, null);
@@ -66,7 +82,7 @@ public abstract class MoveStrategy extends PieceMover implements GameData {
 	public abstract boolean select();
 
 	/**
-	 * Checks if the piece can be moved, and if so, move it.
+	 * Checks if the piece can be moved, and if so, moves it.
 	 * 
 	 * @param target
 	 *            The tile to reach. Must be non-null.

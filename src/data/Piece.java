@@ -17,13 +17,20 @@ public final class Piece extends Observable implements GameData {
 		INITIALISATION, TURN_RESET, FLAGGED_OFFBOARD, MOVED_OFFBOARD, MOVED_ONBOARD, CHANGED_STRATEGY
 	}
 
+	/**
+	 * Immutable, {@link Serializable} class that describes a modification that
+	 * occurred on a {@link Piece}.
+	 * <br>
+	 * Used to notify observers of a modification in the state of an observed
+	 * {@link Piece}.
+	 */
 	public static final class PieceModification implements Serializable {
 		private static final long serialVersionUID = 4962179434952606781L;
 		private final PieceModificationType modifType;
 		private final Coordinates newCoord;
 		private final int newTypeHashCode;
 
-		PieceModification(PieceModificationType modifType,
+		private PieceModification(PieceModificationType modifType,
 				Coordinates newCoord, int newTypeHashCode) {
 			super();
 			this.modifType = modifType;
@@ -58,6 +65,9 @@ public final class Piece extends Observable implements GameData {
 		setPosition(initialPosition);
 	}
 
+	/**
+	 * @see {@link MoveStrategy#update(PieceModification)}
+	 */
 	public void update(PieceModification updateDescription) {
 		strategy.update(updateDescription);
 	}
@@ -80,14 +90,23 @@ public final class Piece extends Observable implements GameData {
 		lastPosition = position;
 	}
 
+	/**
+	 * @see {@link MoveStrategy#select()}
+	 */
 	public boolean select() {
 		return strategy.select();
 	}
 
+	/**
+	 * @see {@link MoveStrategy#tryMove(Coordinates)}
+	 */
 	public boolean tryMove(Coordinates target) {
 		return strategy.tryMove(target);
 	}
 
+	/**
+	 * @see {@link MoveStrategy#canMove()}
+	 */
 	public boolean canMove() {
 		return strategy.canMove();
 	}
@@ -117,6 +136,9 @@ public final class Piece extends Observable implements GameData {
 		return owner;
 	}
 
+	/**
+	 * @see {@link MoveStrategy#getTypeHashCode()}
+	 */
 	public int getTypeHashCode() {
 		return strategy.getTypeHashCode();
 	}
