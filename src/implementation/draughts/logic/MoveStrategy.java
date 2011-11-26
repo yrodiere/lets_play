@@ -28,13 +28,13 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 
 		DirectionOnBoard playerSide = this.controlledPiece.getPlayer()
 				.getBoardSide();
-		if (playerSide == DirectionOnBoard.UP) {
+		if (playerSide.equals(DirectionOnBoard.UP)) {
 			FORWARD_LEFT = DirectionOnBoard.DOWN_RIGHT;
 			FORWARD_RIGHT = DirectionOnBoard.DOWN_LEFT;
 			BACKWARD_LEFT = DirectionOnBoard.UP_RIGHT;
 			BACKWARD_RIGHT = DirectionOnBoard.UP_LEFT;
 		} else {
-			assert (playerSide == DirectionOnBoard.DOWN);
+			assert (playerSide.equals(DirectionOnBoard.DOWN));
 			FORWARD_LEFT = DirectionOnBoard.UP_LEFT;
 			FORWARD_RIGHT = DirectionOnBoard.UP_RIGHT;
 			BACKWARD_LEFT = DirectionOnBoard.DOWN_LEFT;
