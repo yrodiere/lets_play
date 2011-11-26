@@ -63,9 +63,7 @@ public abstract class MoveStrategy extends PieceMover implements GameData {
 
 	@Override
 	public void endTurn() {
-		if (controlledPiece.getOffBoardFlag()) {
-			movePiece(controlledPiece, null);
-		}
+		// Do nothing by default
 	}
 
 	@Override

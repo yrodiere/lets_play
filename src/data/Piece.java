@@ -73,12 +73,12 @@ public final class Piece extends Observable implements GameData {
 
 	@Override
 	public void resetTurn() {
+		strategy.resetTurn();
 		if (position != lastPosition) {
 			notifyObservers(new PieceModification(
 					PieceModificationType.TURN_RESET,
 					lastPosition.getCoordinates(), getTypeHashCode()));
 		}
-		strategy.resetTurn();
 		position = lastPosition;
 		offBoardFlag = false;
 	}
@@ -86,6 +86,9 @@ public final class Piece extends Observable implements GameData {
 	@Override
 	public void endTurn() {
 		strategy.endTurn();
+		if (offBoardFlag) {
+			setPosition(null);
+		}
 		lastPosition = position;
 	}
 
