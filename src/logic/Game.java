@@ -1,5 +1,6 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import data.Board;
@@ -10,94 +11,87 @@ import data.Player.PlayerStatus;
 
 //TODO
 public abstract class Game {
-	
+
 	public enum SelectionReturnCode {
-		SUCCESS,
-		MOVE_PENDING,
-		NOT_PLAYING,
-		INVALID_PIECE_SELECTION,
-		INVALID_TARGET_SELECTION;
+		SUCCESS, MOVE_PENDING, NOT_PLAYING, INVALID_PIECE_SELECTION, INVALID_TARGET_SELECTION;
 	}
-	
+
 	public enum EndTurnReturnCode {
-		SUCCESS,	
-		NOT_PLAYING,
-		MUST_PLAY_BEFORE_ENDTURN,
-		INVALID_MOVE;	
+		SUCCESS, NOT_PLAYING, MUST_PLAY_BEFORE_ENDTURN, INVALID_MOVE;
 	}
-	
+
 	/*
-	 *  -----------------------------------------------Attributes------------------------------------------------------------
+	 * -----------------------------------------------Attributes------------------
+	 * ------------------------------------------
 	 */
-	
+
 	protected boolean currentPlayerHasPlayed = false;
-	
-	protected Rules rules;
-	
-	protected Board board;
-	
-	protected List<Player> players;
-	
+
+	protected final Rules rules;
+
+	protected final Board board;
+
+	protected final List<Player> players;
+
 	protected Piece selectedPiece = null;
-	
-	
+
 	/*
-	 *  -----------------------------------------------Methodes------------------------------------------------------------
+	 * -----------------------------------------------Methodes--------------------
+	 * ----------------------------------------
 	 */
-	
-	public Game(Rules myRules, Board myBoard, List<Player> myPlayers) throws Exception{
-		
+
+	public Game(Rules myRules, Board myBoard, List<Player> myPlayers)
+			throws Exception {
+
 		rules = myRules;
 
 		board = myBoard;
-		
-		players = myPlayers;	
-		
-		if(myPlayers.size() != rules.getNbPlayer()){
-			throw new Exception("Two players required !");		
-		}else{
-			for(Player p : players){
-				if(p == null){
-					throw new Exception("Two players required !");		
-				}
-			}
+
+		players = new ArrayList<Player>(myPlayers);
+
+		if (myPlayers.size() != rules.getNbPlayer() || myPlayers.contains(null)) {
+			throw new Exception(rules.getNbPlayer() + " players required !");
 		}
 	}
-	
+
 	/**
-	 *  @param actor Player who led the selection attempt.
-	 *  @param location Coordinates where the player acted on.
-	 *  @return code specifying the result of the select attempt. 
+	 * @param actor
+	 *            Player who led the selection attempt.
+	 * @param location
+	 *            Coordinates where the player acted on.
+	 * @return code specifying the result of the select attempt.
 	 */
-	public SelectionReturnCode select(Player actor, Coordinates location){
-		
-		if(actor.getStatus() != PlayerStatus.PLAYING){
+	public SelectionReturnCode select(Player actor, Coordinates location) {
+
+		if (actor.getStatus() != PlayerStatus.PLAYING) {
 			return SelectionReturnCode.NOT_PLAYING;
 		}
-		
+
 		return specificSelect(actor, location);
 	}
-	
+
 	/**
-	 *  @param actor Player who led the end of the turn attempt.
-	 *  @return code specifying the result of the end of the turn attempt. 
+	 * @param actor
+	 *            Player who led the end of the turn attempt.
+	 * @return code specifying the result of the end of the turn attempt.
 	 */
-	public EndTurnReturnCode endTurn(Player actor){
-		
-		if(actor.getStatus() != PlayerStatus.PLAYING){
+	public EndTurnReturnCode endTurn(Player actor) {
+
+		if (actor.getStatus() != PlayerStatus.PLAYING) {
 			return EndTurnReturnCode.NOT_PLAYING;
 		}
-		
-		if(!currentPlayerHasPlayed){
+
+		if (!currentPlayerHasPlayed) {
 			return EndTurnReturnCode.MUST_PLAY_BEFORE_ENDTURN;
 		}
-		
+
 		return specificEndTurn(actor);
 	}
-	
-	abstract protected void init();	
-	
+
+	abstract protected void init();
+
 	abstract protected EndTurnReturnCode specificEndTurn(Player actor);
-	
-	abstract protected SelectionReturnCode specificSelect(Player actor, Coordinates location);
+
+	abstract protected SelectionReturnCode specificSelect(Player actor,
+			Coordinates location);
 }

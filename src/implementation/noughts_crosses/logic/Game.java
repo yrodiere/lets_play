@@ -17,7 +17,7 @@ public class Game extends logic.Game {
 	 *  -----------------------------------------------Attributes------------------------------------------------------------
 	 */	
 	
-	List<List<Tile>> everyPossibleLigne = new ArrayList<List<Tile>>();
+	List<List<Tile>> everyPossibleLine = new ArrayList<List<Tile>>();
 	
 	/*
 	 *  -----------------------------------------------Methodes------------------------------------------------------------
@@ -31,15 +31,10 @@ public class Game extends logic.Game {
 
 	@Override
 	public SelectionReturnCode specificSelect(Player actor, Coordinates location) {
-		
-	
 		Tile selectedTile = board.findTileAt(location);
 		
-		if(selectedTile == null){		
-			return null;
-		}
-		
 		if( selectedPiece.tryMove( selectedTile.getCoordinates() ) ){
+			currentPlayerHasPlayed = true;
 			return SelectionReturnCode.SUCCESS;
 		}else{
 			return SelectionReturnCode.INVALID_TARGET_SELECTION;
@@ -59,7 +54,7 @@ public class Game extends logic.Game {
 		
 		boolean boardFull = true;
 		
-		for(List<Tile> ligne : everyPossibleLigne){
+		for(List<Tile> ligne : everyPossibleLine){
 			
 			int nbActorPiecesAligned = 0;
 		
@@ -117,16 +112,16 @@ public class Game extends logic.Game {
 		
 		for(int r = 0 ; r < myRules.getBoardRowCount() ; r++ ){
 			
-			List<Tile> rowLigne = new ArrayList<Tile>();
-			List<Tile> columnLigne = new ArrayList<Tile>();
+			List<Tile> rowLine = new ArrayList<Tile>();
+			List<Tile> columnLine = new ArrayList<Tile>();
 			
 			for(int c = 0 ; c < myRules.getBoardColumnCount() ; c++ ){
-				rowLigne.add(board.findTileAt(new Coordinates(r, c)));
-				columnLigne.add(board.findTileAt(new Coordinates(c, r)));
+				rowLine.add(board.findTileAt(new Coordinates(r, c)));
+				columnLine.add(board.findTileAt(new Coordinates(c, r)));
 			}
 			
-			everyPossibleLigne.add(rowLigne);
-			everyPossibleLigne.add(columnLigne);
+			everyPossibleLine.add(rowLine);
+			everyPossibleLine.add(columnLine);
 		}
 		
 		List<Tile> diagLigne1 = new ArrayList<Tile>();
@@ -143,8 +138,8 @@ public class Game extends logic.Game {
 			diagLigne2.add(board.findTileAt(coords2.translationTowards(DirectionOnBoard.UP_LEFT)));
 		}		
 		
-		everyPossibleLigne.add(diagLigne1);
-		everyPossibleLigne.add(diagLigne2);
+		everyPossibleLine.add(diagLigne1);
+		everyPossibleLine.add(diagLigne2);
 	}
 	
 	

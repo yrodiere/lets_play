@@ -50,8 +50,11 @@ public class Game extends logic.Game {
 			if (selectedPiece.tryMove(selectedTile.getCoordinates())) {
 
 				if (selectedPiece.select()) {
+					// The piece can still move
 					return SelectionReturnCode.MOVE_PENDING;
 				} else {
+					// The piece cannot move anymore
+					currentPlayerHasPlayed = true;
 					return SelectionReturnCode.SUCCESS;
 				}
 			}
@@ -62,6 +65,11 @@ public class Game extends logic.Game {
 
 	@Override
 	protected EndTurnReturnCode specificEndTurn(Player actor) {
+		/*
+		 * TODO: handle rules like "must select the longest capture sequence"
+		 * Already handled (in part) in specificSelect: a player must move when
+		 * he can.
+		 */
 
 		checkForPieceUpgrade(actor);
 
@@ -160,6 +168,7 @@ public class Game extends logic.Game {
 	}
 
 	protected void resetTurn() {
+		currentPlayerHasPlayed = false;
 		board.resetTurn();
 
 		for (Player p : players) {
