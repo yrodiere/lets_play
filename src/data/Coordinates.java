@@ -2,7 +2,6 @@ package data;
 
 import java.io.Serializable;
 
-//TODO
 public class Coordinates implements Serializable {
 	private static final long serialVersionUID = 6931752803665991178L;
 
@@ -41,25 +40,18 @@ public class Coordinates implements Serializable {
 		switch (direction) {
 		case UP:
 			return new Coordinates(row + 1, column);
-
 		case UP_RIGHT:
 			return new Coordinates(row + 1, column + 1);
-
 		case RIGHT:
 			return new Coordinates(row, column + 1);
-
 		case DOWN_RIGHT:
 			return new Coordinates(row - 1, column + 1);
-
 		case DOWN:
 			return new Coordinates(row - 1, column);
-
 		case DOWN_LEFT:
 			return new Coordinates(row - 1, column - 1);
-
 		case LEFT:
 			return new Coordinates(row, column - 1);
-
 		case UP_LEFT:
 			return new Coordinates(row + 1, column - 1);
 		}
@@ -68,8 +60,36 @@ public class Coordinates implements Serializable {
 	}
 
 	public DirectionOnBoard directionTo(Coordinates target) {
-		// TODO Auto-generated method stub
-		return null;
+		if (equals(target)) {
+			return null;
+		} else {
+			int rowDiff = target.row - row;
+			int colDiff = target.column - column;
+
+			// Straight directions
+			if (rowDiff == 0) {
+				return (colDiff > 0 ? DirectionOnBoard.RIGHT
+						: DirectionOnBoard.LEFT);
+			}
+			if (colDiff == 0) {
+				return (rowDiff > 0 ? DirectionOnBoard.UP
+						: DirectionOnBoard.DOWN);
+			}
+
+			// Unsupported directions
+			if (Math.abs(rowDiff) != Math.abs(colDiff)) {
+				return null;
+			}
+
+			// Diagonal directions
+			if (rowDiff > 0) {
+				return (colDiff > 0 ? DirectionOnBoard.UP_RIGHT
+						: DirectionOnBoard.UP_LEFT);
+			} else {
+				return (colDiff > 0 ? DirectionOnBoard.DOWN_RIGHT
+						: DirectionOnBoard.DOWN_LEFT);
+			}
+		}
 	}
 
 	@Override
@@ -84,5 +104,13 @@ public class Coordinates implements Serializable {
 		}
 
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		hash = hash * 17 + row;
+		hash = hash * 31 + column;
+		return hash;
 	}
 }
