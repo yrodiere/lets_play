@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Coordinates implements Serializable {
 	private static final long serialVersionUID = 6931752803665991178L;
 
-	public enum DirectionOnBoard {
+	public static enum DirectionOnBoard {
 		UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
 	}
 

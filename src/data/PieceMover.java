@@ -11,8 +11,8 @@ public abstract class PieceMover {
 		piece.setPosition(newPosition);
 	}
 
-	protected static void setOffBoardFlag(Piece piece, boolean flagValue) {
-		piece.setOffBoardFlag(flagValue);
+	protected static void setOffBoardFlag(Piece piece) {
+		piece.setOffBoardFlag();
 	}
 
 	protected static void setSelected(Tile tile, boolean selected) {

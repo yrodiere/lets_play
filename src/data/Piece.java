@@ -19,8 +19,7 @@ public final class Piece extends Observable implements GameData {
 
 	/**
 	 * Immutable, {@link Serializable} class that describes a modification that
-	 * occurred on a {@link Piece}.
-	 * <br>
+	 * occurred on a {@link Piece}. <br>
 	 * Used to notify observers of a modification in the state of an observed
 	 * {@link Piece}.
 	 */
@@ -161,12 +160,12 @@ public final class Piece extends Observable implements GameData {
 		}
 	}
 
-	void setOffBoardFlag(boolean newOffBoardFlag) {
-		if (!offBoardFlag && newOffBoardFlag) {
+	void setOffBoardFlag() {
+		if (!offBoardFlag) {
 			notifyObservers(new PieceModification(
 					PieceModificationType.FLAGGED_OFFBOARD, getCoordinates(),
 					getTypeHashCode()));
+			offBoardFlag = true;
 		}
-		offBoardFlag = newOffBoardFlag;
 	}
 }

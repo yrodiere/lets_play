@@ -5,15 +5,20 @@ public abstract class Rules {
 	/*
 	 *  -----------------------------------------------Attributes------------------------------------------------------------
 	 */
-	protected int boardRowCount ;
-	
-	protected int boardColumnCount;
-	
-	protected int nbPlayer;
+	private int nbPlayer;
+	private int boardRowCount ;
+	private int boardColumnCount;
 	
 	/*
 	 *  -----------------------------------------------Methodes------------------------------------------------------------
 	 */
+
+	public Rules(int nbPlayer, int boardRowCount, int boardColumnCount) {
+		super();
+		this.nbPlayer = nbPlayer;
+		this.boardRowCount = boardRowCount;
+		this.boardColumnCount = boardColumnCount;
+	}
 	
 	public int getBoardRowCount(){
 		return boardRowCount;

@@ -185,7 +185,7 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 			if (currentPiece != null) {
 				assert (!currentPiece.getPlayer().equals(
 						controlledPiece.getPlayer()));
-				setOffBoardFlag(currentPiece, true);
+				setOffBoardFlag(currentPiece);
 				hasCapturedThisTurn = true;
 			}
 		}

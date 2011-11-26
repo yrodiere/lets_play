@@ -12,10 +12,7 @@ public class Rules extends logic.Rules {
 	protected Coordinates initPieceStartPosition;
 	
 	public Rules(){
-		
-		boardColumnCount = 10;
-		
-		boardRowCount = 10;
+		super(2,10,10);
 		
 		nbRowsOfPiece = 4;		
 	}

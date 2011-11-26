@@ -7,9 +7,6 @@ public class Rules extends logic.Rules {
 	 */
 	
 	Rules(){
-		
-		boardColumnCount = 3;
-		
-		boardRowCount = 3;	
+		super(2,3,3);	
 	}
 }
