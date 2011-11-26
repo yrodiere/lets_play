@@ -10,7 +10,6 @@ import data.Coordinates.DirectionOnBoard;
 import data.Player;
 import data.Tile;
 
-//TODO
 public class Game extends logic.Game {
 	
 	/*

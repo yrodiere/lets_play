@@ -9,7 +9,6 @@ import data.Piece;
 import data.Player;
 import data.Player.PlayerStatus;
 
-//TODO
 public abstract class Game {
 
 	public enum SelectionReturnCode {

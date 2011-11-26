@@ -1,6 +1,5 @@
 package data;
 
-//TODO
 public interface GameData {
 	/**
 	 * Resets the game data to the state it had at the beginning of the current

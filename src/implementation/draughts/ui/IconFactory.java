@@ -5,7 +5,6 @@ import data.Piece;
 import data.Player;
 import data.Tile;
 
-//TODO
 public class IconFactory extends ui.IconFactory {
 
 	@Override

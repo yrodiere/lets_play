@@ -5,12 +5,11 @@ import data.Piece;
 import data.Player;
 import data.Tile;
 
-//TODO
 public class IconFactory extends ui.IconFactory {
 
 	@Override
 	public Object createTileIcon(Tile model) {
-		// TODO Auto-generated method stub
+		// TODO create a tile icon
 		return null;
 	}
 

@@ -4,37 +4,39 @@ import implementation.noughts_crosses.PieceType;
 import data.Board;
 import data.Coordinates;
 import data.Piece;
+import data.Tile;
 
-//TODO
 class MoveStrategy extends logic.MoveStrategy {
 
 	public MoveStrategy(Piece controlledPiece, Board board, Rules rules) {
 		super(controlledPiece, board, rules, new MoveStrategyFactory(board,
 				rules));
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public boolean select() {
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException(
+				"No piece should be selected in this game");
 	}
 
 	@Override
 	public boolean tryMove(Coordinates target) {
-		// TODO Auto-generated method stub
-		return false;
+		Tile targetTile = board.findTileAt(target);
+		if (!canMove() || targetTile == null) {
+			return false;
+		} else {
+			movePiece(controlledPiece, targetTile);
+			return true;
+		}
 	}
 
 	@Override
 	public boolean canMove() {
-		// TODO Auto-generated method stub
-		return false;
+		return controlledPiece.getCoordinates() == null;
 	}
 
 	@Override
 	public int getTypeHashCode() {
 		return PieceType.MAIN.hashCode();
 	}
-
 }
