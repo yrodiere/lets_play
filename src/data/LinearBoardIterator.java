@@ -51,7 +51,7 @@ public class LinearBoardIterator implements Iterator<Tile> {
 	@Override
 	public final Tile next() {
 		if (!hasNext()) {
-			throw new NoSuchElementException("End of board was reached.");
+			throw new NoSuchElementException("Last tile was reached.");
 		}
 
 		setNext();
