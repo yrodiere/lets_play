@@ -75,6 +75,11 @@ public final class Tile extends Observable implements GameData {
 	 *            The description of the modification
 	 */
 	public void update(TileModification updateDescription) {
+		if (updateDescription.isNowReachable() == reachable
+				|| updateDescription.isNowSelected() == selected) {
+			return;
+		}
+
 		notifyObservers(updateDescription);
 
 		switch (updateDescription.getType()) {
@@ -89,18 +94,22 @@ public final class Tile extends Observable implements GameData {
 
 	@Override
 	public void resetTurn() {
-		notifyObservers(new TileModification(TileModificationType.TURN_RESET,
-				false, false));
-		selected = false;
-		reachable = false;
+		if (reachable || selected) {
+			notifyObservers(new TileModification(
+					TileModificationType.TURN_RESET, false, false));
+			selected = false;
+			reachable = false;
+		}
 	}
 
 	@Override
 	public void endTurn() {
-		notifyObservers(new TileModification(
-				TileModificationType.FLAGS_CHANGED, false, false));
-		selected = false;
-		reachable = false;
+		if (reachable || selected) {
+			notifyObservers(new TileModification(
+					TileModificationType.FLAGS_CHANGED, false, false));
+			selected = false;
+			reachable = false;
+		}
 	}
 
 	/**
@@ -152,14 +161,20 @@ public final class Tile extends Observable implements GameData {
 	}
 
 	void setSelected(boolean selected) {
-		notifyObservers(new TileModification(
-				TileModificationType.FLAGS_CHANGED, this.reachable, selected));
-		this.selected = selected;
+		if (this.selected != selected) {
+			notifyObservers(new TileModification(
+					TileModificationType.FLAGS_CHANGED, this.reachable,
+					selected));
+			this.selected = selected;
+		}
 	}
 
 	void setReachable(boolean reachable) {
-		notifyObservers(new TileModification(
-				TileModificationType.FLAGS_CHANGED, reachable, this.selected));
-		this.reachable = reachable;
+		if (this.reachable != reachable) {
+			notifyObservers(new TileModification(
+					TileModificationType.FLAGS_CHANGED, reachable,
+					this.selected));
+			this.reachable = reachable;
+		}
 	}
 }
