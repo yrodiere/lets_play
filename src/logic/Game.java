@@ -90,9 +90,10 @@ public abstract class Game {
 
 		for (Player player : players) {
 			player.addObserver(obs);
+			player.addPieceObserver(obs);
 		}
-
-		board.addObserver(obs);
+		
+		board.addTileObserver(obs);
 	}
 
 	abstract protected void init();

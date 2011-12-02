@@ -4,11 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
 import data.Coordinates.DirectionOnBoard;
 
 public final class Player extends Observable implements GameData {
-	public static enum PlayerStatus {/* TODO */
+	public static enum PlayerStatus {
 		PLAYING, WAITING, LOSS, VICTORY, DRAW;
 	};
 
@@ -64,6 +65,12 @@ public final class Player extends Observable implements GameData {
 		this.boardSide = boardSide;
 		this.pieces = new ArrayList<Piece>();
 		this.status = PlayerStatus.WAITING;
+	}
+
+	public void addPieceObserver(Observer observer) {
+		for (Piece piece : pieces) {
+			piece.addObserver(observer);
+		}
 	}
 
 	@Override

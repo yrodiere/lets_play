@@ -2,6 +2,7 @@ package data;
 
 import java.io.Serializable;
 import java.util.Observable;
+import java.util.Observer;
 
 import logic.MoveStrategy;
 
@@ -62,6 +63,14 @@ public final class Piece extends Observable implements GameData {
 		this.owner = owner;
 		lastPosition = initialPosition;
 		setPosition(initialPosition);
+	}
+
+	@Override
+	public synchronized void addObserver(Observer o) {
+		super.addObserver(o);
+		o.update(this, new PieceModification(
+				PieceModificationType.INITIALISATION, getCoordinates(),
+				getTypeHashCode()));
 	}
 
 	/**
