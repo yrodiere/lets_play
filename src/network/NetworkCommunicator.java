@@ -144,8 +144,8 @@ public class NetworkCommunicator {
 		return true;
 	}
 
-	public boolean notifyPlayerModification(
-			List<IdentifiedPlayerModification> modifications) {
+	public boolean notifyModification(
+			List<IdentifiedModification> modifications) {
 		try {
 			OutputStream os = socket.getOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(os);
@@ -160,22 +160,6 @@ public class NetworkCommunicator {
 
 		return true;
 	}
-
-	public boolean notifyPieceModification(
-			List<IdentifiedPieceModification> modifications) {
-		try {
-			OutputStream os = socket.getOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(os);
-
-			oos.writeObject(modifications);
-
-			oos.close();
-			os.close();
-		} catch (Exception e) {
-			return false;
-		}
-
-		return true;
-	}
+	
 
 }

@@ -30,7 +30,7 @@ public final class Player extends Observable implements GameData {
 			this.newStatus = newStatus;
 		}
 
-		public PlayerModificationType getModifType() {
+		public PlayerModificationType getType() {
 			return modifType;
 		}
 
@@ -165,6 +165,23 @@ public final class Player extends Observable implements GameData {
 		notifyObservers(new PlayerModification(
 				PlayerModificationType.STATUS_CHANGE, newStatus));
 		this.status = newStatus;
+	}
+
+	public void update(PlayerModification modif) {
+		switch (modif.getType()) {
+		case STATUS_CHANGE:
+			this.status = modif.getNewStatus();
+			break;
+		case TURN_RESET:
+			//Nothing happens
+			break;
+
+		case INITIALISATION:
+			// Should not happen; these modifications are not to be
+			// synchronised.
+			throw new IllegalArgumentException(
+					"INITIALISATION and FLAGGED_OFFBOARD modifications are not supported.");
+		}		
 	}
 
 }
