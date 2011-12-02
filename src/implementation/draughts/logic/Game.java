@@ -129,18 +129,17 @@ public class Game extends logic.Game {
 				}
 			}
 		}
-		
-		if(players.get(0).getBoardSide() == DirectionOnBoard.DOWN){
-			
+
+		if (players.get(0).getBoardSide() == DirectionOnBoard.DOWN) {
+
 			players.get(0).init(player1Pieces);
 			players.get(1).init(player2Pieces);
-		}else{
-			
+		} else {
+
 			players.get(1).init(player1Pieces);
 			players.get(0).init(player2Pieces);
 		}
 
-		
 	}
 
 	protected Piece initPiece(Player owner, int row, int column) {

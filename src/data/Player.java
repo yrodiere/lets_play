@@ -7,44 +7,39 @@ import java.util.Observable;
 
 import data.Coordinates.DirectionOnBoard;
 
-//TODO
 public final class Player extends Observable implements GameData {
 	public static enum PlayerStatus {/* TODO */
-		PLAYING,
-		WAITING,
-		LOSS,
-		VICTORY,
-		DRAW;
+		PLAYING, WAITING, LOSS, VICTORY, DRAW;
 	};
-	
+
 	public static enum PlayerModificationType {
 		INITIALISATION, TURN_RESET, STATUS_CHANGE
 	}
 
 	public static final class PlayerModification implements Serializable {
-		
+
 		private static final long serialVersionUID = 6290017442804625491L;
 		private final PlayerModificationType modifType;
-		private final PlayerStatus newStatus;		
-		
+		private final PlayerStatus newStatus;
+
 		private PlayerModification(PlayerModificationType modifType,
 				PlayerStatus newStatus) {
 			super();
 			this.modifType = modifType;
 			this.newStatus = newStatus;
 		}
-		
+
 		public PlayerModificationType getModifType() {
 			return modifType;
 		}
-		
+
 		public PlayerStatus getNewStatus() {
 			return newStatus;
 		}
 	}
-	
+
 	/*
-	 *------------------------Attributs 
+	 * ------------------------Attributs
 	 */
 
 	/**
@@ -55,19 +50,17 @@ public final class Player extends Observable implements GameData {
 	/**
 	 * Player pieces
 	 */
-	private List<Piece> pieces;	
+	private List<Piece> pieces;
 	/**
 	 * Player pieces
 	 */
 	private PlayerStatus status;
-	
-	
-	
+
 	/*
-	 *------------------------Methods 
+	 * ------------------------Methods
 	 */
 
-	public Player(DirectionOnBoard boardSide) {		
+	public Player(DirectionOnBoard boardSide) {
 		this.boardSide = boardSide;
 		this.pieces = new ArrayList<Piece>();
 		this.status = PlayerStatus.WAITING;
@@ -75,29 +68,31 @@ public final class Player extends Observable implements GameData {
 
 	@Override
 	public void resetTurn() {
-		for(Piece piece : pieces){
+		for (Piece piece : pieces) {
 			piece.resetTurn();
 		}
-		
-		notifyObservers(new PlayerModification(PlayerModificationType.TURN_RESET, this.status ));
+
+		notifyObservers(new PlayerModification(
+				PlayerModificationType.TURN_RESET, this.status));
 	}
 
 	@Override
 	public void endTurn() {
-		for(Piece piece : pieces){
+		for (Piece piece : pieces) {
 			piece.endTurn();
 		}
-		
+
 		PlayerStatus newStatus;
-		
-		if(this.status == PlayerStatus.PLAYING){
+
+		if (this.status == PlayerStatus.PLAYING) {
 			newStatus = PlayerStatus.WAITING;
-		}else{
+		} else {
 			newStatus = PlayerStatus.PLAYING;
 		}
-		
-		notifyObservers(new PlayerModification(PlayerModificationType.STATUS_CHANGE, newStatus ));
-		
+
+		notifyObservers(new PlayerModification(
+				PlayerModificationType.STATUS_CHANGE, newStatus));
+
 		this.status = newStatus;
 	}
 
@@ -121,11 +116,11 @@ public final class Player extends Observable implements GameData {
 	}
 
 	public List<Piece> findOnBoardPieces() {
-		
+
 		List<Piece> onBoardPieces = new ArrayList<Piece>();
-		
-		for(Piece piece : pieces){
-			if(piece.getPosition() != null){
+
+		for (Piece piece : pieces) {
+			if (piece.getPosition() != null) {
 				onBoardPieces.add(piece);
 			}
 		}
@@ -133,11 +128,11 @@ public final class Player extends Observable implements GameData {
 	}
 
 	public List<Piece> findOffBoardPieces() {
-		
+
 		List<Piece> offBoardPieces = new ArrayList<Piece>();
-		
-		for(Piece piece : pieces){
-			if(piece.getPosition() == null){
+
+		for (Piece piece : pieces) {
+			if (piece.getPosition() == null) {
 				offBoardPieces.add(piece);
 			}
 		}
@@ -146,19 +141,22 @@ public final class Player extends Observable implements GameData {
 
 	public void win() {
 		PlayerStatus newStatus = PlayerStatus.VICTORY;
-		notifyObservers(new PlayerModification(PlayerModificationType.STATUS_CHANGE, newStatus ));
+		notifyObservers(new PlayerModification(
+				PlayerModificationType.STATUS_CHANGE, newStatus));
 		this.status = newStatus;
 	}
 
 	public void loose() {
 		PlayerStatus newStatus = PlayerStatus.LOSS;
-		notifyObservers(new PlayerModification(PlayerModificationType.STATUS_CHANGE, newStatus ));
+		notifyObservers(new PlayerModification(
+				PlayerModificationType.STATUS_CHANGE, newStatus));
 		this.status = newStatus;
 	}
 
 	public void draw() {
 		PlayerStatus newStatus = PlayerStatus.DRAW;
-		notifyObservers(new PlayerModification(PlayerModificationType.STATUS_CHANGE, newStatus ));
+		notifyObservers(new PlayerModification(
+				PlayerModificationType.STATUS_CHANGE, newStatus));
 		this.status = newStatus;
 	}
 

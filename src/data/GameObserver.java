@@ -31,24 +31,33 @@ public abstract class GameObserver implements Observer {
 
 	/**
 	 * Called when an observed {@link Piece} is about to be modified.
-	 * @param modifiedPiece The {@link Piece}, still unmodified.
-	 * @param modification The modification that is about to occur.
+	 * 
+	 * @param modifiedPiece
+	 *            The {@link Piece}, still unmodified.
+	 * @param modification
+	 *            The modification that is about to occur.
 	 */
 	protected abstract void update(Piece modifiedPiece,
 			PieceModification modification);
-	
+
 	/**
 	 * Called when an observed {@link Tile} is about to be modified.
-	 * @param modifiedTile The {@link Tile}, still unmodified.
-	 * @param modification The modification that is about to occur.
+	 * 
+	 * @param modifiedTile
+	 *            The {@link Tile}, still unmodified.
+	 * @param modification
+	 *            The modification that is about to occur.
 	 */
 	protected abstract void update(Tile modifiedTile,
 			TileModification modification);
-	
+
 	/**
 	 * Called when an observed {@link Player} is about to be modified.
-	 * @param modifiedPlayer The {@link Player}, still unmodified.
-	 * @param modification The modification that is about to occur.
+	 * 
+	 * @param modifiedPlayer
+	 *            The {@link Player}, still unmodified.
+	 * @param modification
+	 *            The modification that is about to occur.
 	 */
 	protected abstract void update(Player modifiedPlayer,
 			PlayerModification modification);

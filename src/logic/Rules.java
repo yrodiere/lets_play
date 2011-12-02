@@ -1,16 +1,16 @@
 package logic;
 
 public abstract class Rules {
-	
+
 	/*
-	 *  -----------------------------------------------Attributes------------------------------------------------------------
+	 * -----------------------------------------------Attributes------------------
 	 */
 	private int nbPlayer;
-	private int boardRowCount ;
+	private int boardRowCount;
 	private int boardColumnCount;
-	
+
 	/*
-	 *  -----------------------------------------------Methodes------------------------------------------------------------
+	 * -----------------------------------------------Methodes--------------------
 	 */
 
 	public Rules(int nbPlayer, int boardRowCount, int boardColumnCount) {
@@ -19,16 +19,16 @@ public abstract class Rules {
 		this.boardRowCount = boardRowCount;
 		this.boardColumnCount = boardColumnCount;
 	}
-	
-	public int getBoardRowCount(){
+
+	public int getBoardRowCount() {
 		return boardRowCount;
 	}
 
-	public int getBoardColumnCount(){
+	public int getBoardColumnCount() {
 		return boardColumnCount;
 	}
-	
-	public int getNbPlayer(){
+
+	public int getNbPlayer() {
 		return nbPlayer;
 	}
 }

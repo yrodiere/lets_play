@@ -1,12 +1,12 @@
 package implementation.noughts_crosses.logic;
 
-public class Rules extends logic.Rules {	
-	
+public class Rules extends logic.Rules {
+
 	/*
-	 *  -----------------------------------------------Attributes------------------------------------------------------------
+	 * -----------------------------------------------Attributes------------------
 	 */
-	
-	Rules(){
-		super(2,3,3);	
+
+	Rules() {
+		super(2, 3, 3);
 	}
 }

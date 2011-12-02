@@ -14,7 +14,6 @@ import data.Coordinates.DirectionOnBoard;
 import data.Piece.PieceModification;
 import data.Player.PlayerModification;
 
-//TODO
 public class NetworkCommunicator {
 
 	public interface IdentifiedModification {

@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 
 import data.Coordinates.DirectionOnBoard;
 
-
 public class LinearBoardIterator implements Iterator<Tile> {
 	private final Board board;
 	private final DirectionOnBoard direction;

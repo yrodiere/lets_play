@@ -16,31 +16,31 @@ public class Synchroniser extends GameObserver {
 	@Override
 	protected void update(Piece modifiedPiece, PieceModification modification) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void update(Tile modifiedTile, TileModification modification) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void update(Player modifiedPlayer, PlayerModification modification) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void handleRemotePieceNotification(Coordinates identifier,
 			PieceModification modif) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public void handleRemotePlayerNotification(DirectionOnBoard identifier,
 			PlayerModification modif) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -22,7 +22,6 @@ public abstract class Game {
 
 	/*
 	 * -----------------------------------------------Attributes------------------
-	 * ------------------------------------------
 	 */
 
 	protected boolean currentPlayerHasPlayed = false;
@@ -37,7 +36,6 @@ public abstract class Game {
 
 	/*
 	 * -----------------------------------------------Methodes--------------------
-	 * ----------------------------------------
 	 */
 
 	public Game(Rules myRules, Board myBoard, List<Player> myPlayers)
@@ -87,13 +85,13 @@ public abstract class Game {
 
 		return specificEndTurn(actor);
 	}
-	
-	public void addObservers(Observer obs){
-		
-		for(Player player : players){
+
+	public void addObservers(Observer obs) {
+
+		for (Player player : players) {
 			player.addObserver(obs);
 		}
-		
+
 		board.addObserver(obs);
 	}
 
