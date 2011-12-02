@@ -8,6 +8,7 @@ import data.Coordinates;
 import data.Piece;
 import data.Player;
 import data.Tile;
+import data.Coordinates.DirectionOnBoard;
 
 public class Game extends logic.Game {
 	Game(Rules myRules, Board myBoard, List<Player> myPlayers) throws Exception {
@@ -128,10 +129,18 @@ public class Game extends logic.Game {
 				}
 			}
 		}
+		
+		if(players.get(0).getBoardSide() == DirectionOnBoard.DOWN){
+			
+			players.get(0).init(player1Pieces);
+			players.get(1).init(player2Pieces);
+		}else{
+			
+			players.get(1).init(player1Pieces);
+			players.get(0).init(player2Pieces);
+		}
 
-		players.get(0).init(player1Pieces);
-
-		players.get(1).init(player1Pieces);
+		
 	}
 
 	protected Piece initPiece(Player owner, int row, int column) {
@@ -157,7 +166,7 @@ public class Game extends logic.Game {
 	protected void checkForPieceUpgrade(Player actor) {
 		int lastRow = 0;
 
-		if (actor == players.get(0)) {
+		if (actor.getBoardSide() == DirectionOnBoard.UP) {
 			lastRow = rules.getBoardRowCount();
 		}
 

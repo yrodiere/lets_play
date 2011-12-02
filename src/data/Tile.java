@@ -20,7 +20,7 @@ public final class Tile extends Observable implements GameData {
 	 */
 
 	public static enum TileModificationType {
-		INITIALISATION, TURN_RESET, FLAGS_CHANGED;
+		INITIALISATION, TURN_RESET, FLAGS_CHANGED, PIECE_CHANGED;
 	}
 
 	/**
@@ -32,13 +32,15 @@ public final class Tile extends Observable implements GameData {
 	public static final class TileModification implements Serializable {
 		private static final long serialVersionUID = -974482670427287450L;
 		private final TileModificationType type;
+		private final Piece newPiece;
 		private final boolean newReachableFlag;
 		private final boolean newSelectedFlag;
 
-		private TileModification(TileModificationType type,
+		private TileModification(TileModificationType type, Piece newPiece,
 				boolean newReachableFlag, boolean newSelectedFlag) {
 			super();
 			this.type = type;
+			this.newPiece = newPiece;
 			this.newReachableFlag = newReachableFlag;
 			this.newSelectedFlag = newSelectedFlag;
 		}
@@ -54,6 +56,10 @@ public final class Tile extends Observable implements GameData {
 		public boolean isNowSelected() {
 			return newSelectedFlag;
 		}
+
+		public Piece getNewPiece() {
+			return newPiece;
+		}
 	}
 
 	public Tile(Coordinates coordinates) {
@@ -64,8 +70,8 @@ public final class Tile extends Observable implements GameData {
 	public synchronized void addObserver(Observer o) {
 		super.addObserver(o);
 		o.update(this, new TileModification(
-				TileModificationType.INITIALISATION, this.reachable,
-				this.selected));
+				TileModificationType.INITIALISATION, this.piece,
+				this.reachable, this.selected));
 	}
 
 	/**
@@ -89,6 +95,11 @@ public final class Tile extends Observable implements GameData {
 			this.reachable = updateDescription.isNowReachable();
 			this.selected = updateDescription.isNowSelected();
 			break;
+		case PIECE_CHANGED:
+			// Do nothing, the piece handles this type of modification
+			// In fact, this should not happen
+			throw new IllegalArgumentException(
+					"PIECE_CHANGED modifications are not supported.");
 		}
 	}
 
@@ -96,7 +107,7 @@ public final class Tile extends Observable implements GameData {
 	public void resetTurn() {
 		if (reachable || selected) {
 			notifyObservers(new TileModification(
-					TileModificationType.TURN_RESET, false, false));
+					TileModificationType.TURN_RESET, this.piece, false, false));
 			selected = false;
 			reachable = false;
 		}
@@ -106,7 +117,8 @@ public final class Tile extends Observable implements GameData {
 	public void endTurn() {
 		if (reachable || selected) {
 			notifyObservers(new TileModification(
-					TileModificationType.FLAGS_CHANGED, false, false));
+					TileModificationType.FLAGS_CHANGED, this.piece, false,
+					false));
 			selected = false;
 			reachable = false;
 		}
@@ -156,15 +168,20 @@ public final class Tile extends Observable implements GameData {
 	}
 
 	void setPiece(Piece newPiece) {
-		assert (piece != null);
+		assert (isEmpty());
+		if (newPiece != null) {
+			notifyObservers(new TileModification(
+					TileModificationType.PIECE_CHANGED, newPiece, reachable,
+					selected));
+		}
 		piece = newPiece;
 	}
 
 	void setSelected(boolean selected) {
 		if (this.selected != selected) {
 			notifyObservers(new TileModification(
-					TileModificationType.FLAGS_CHANGED, this.reachable,
-					selected));
+					TileModificationType.FLAGS_CHANGED, this.piece,
+					this.reachable, selected));
 			this.selected = selected;
 		}
 	}
@@ -172,7 +189,7 @@ public final class Tile extends Observable implements GameData {
 	void setReachable(boolean reachable) {
 		if (this.reachable != reachable) {
 			notifyObservers(new TileModification(
-					TileModificationType.FLAGS_CHANGED, reachable,
+					TileModificationType.FLAGS_CHANGED, this.piece, reachable,
 					this.selected));
 			this.reachable = reachable;
 		}

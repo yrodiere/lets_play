@@ -1,5 +1,7 @@
 package network;
 
+import data.Coordinates;
+import data.Coordinates.DirectionOnBoard;
 import data.GameObserver;
 import data.Piece;
 import data.Piece.PieceModification;
@@ -25,6 +27,18 @@ public class Synchroniser extends GameObserver {
 
 	@Override
 	protected void update(Player modifiedPlayer, PlayerModification modification) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void handleRemotePieceNotification(Coordinates identifier,
+			PieceModification modif) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void handleRemotePlayerNotification(DirectionOnBoard identifier,
+			PlayerModification modif) {
 		// TODO Auto-generated method stub
 		
 	}
