@@ -1,6 +1,7 @@
 package data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -9,39 +10,99 @@ import data.Coordinates.DirectionOnBoard;
 //TODO
 public final class Player extends Observable implements GameData {
 	public static enum PlayerStatus {/* TODO */
-		PLAYING
+		PLAYING,
+		WAITING,
+		LOSS,
+		VICTORY,
+		DRAW;
 	};
+	
+	public static enum PlayerModificationType {
+		INITIALISATION, TURN_RESET, STATUS_CHANGE
+	}
 
 	public static final class PlayerModification implements Serializable {
+		
 		private static final long serialVersionUID = 6290017442804625491L;
-		// TODO
+		private final PlayerModificationType modifType;
+		private final PlayerStatus newStatus;		
+		
+		private PlayerModification(PlayerModificationType modifType,
+				PlayerStatus newStatus) {
+			super();
+			this.modifType = modifType;
+			this.newStatus = newStatus;
+		}
+		
+		public PlayerModificationType getModifType() {
+			return modifType;
+		}
+		
+		public PlayerStatus getNewStatus() {
+			return newStatus;
+		}
 	}
+	
+	/*
+	 *------------------------Attributs 
+	 */
 
 	/**
 	 * Allows other objects to identify this player without knowing the other
 	 * player.
 	 */
 	private final DirectionOnBoard boardSide;
+	/**
+	 * Player pieces
+	 */
+	private List<Piece> pieces;	
+	/**
+	 * Player pieces
+	 */
+	private PlayerStatus status;
+	
+	
+	
+	/*
+	 *------------------------Methods 
+	 */
 
-	public Player(DirectionOnBoard boardSide) {
+	public Player(DirectionOnBoard boardSide) {		
 		this.boardSide = boardSide;
+		this.pieces = new ArrayList<Piece>();
+		this.status = PlayerStatus.WAITING;
 	}
 
 	@Override
 	public void resetTurn() {
-		// TODO Auto-generated method stub
-		// Just call resetTurn on every owned piece and call notifyObservers
+		for(Piece piece : pieces){
+			piece.resetTurn();
+		}
+		
+		notifyObservers(new PlayerModification(PlayerModificationType.TURN_RESET, this.status ));
 	}
 
 	@Override
 	public void endTurn() {
-		// TODO Auto-generated method stub
-		// Just call endTurn on every owned piece and call notifyObservers
+		for(Piece piece : pieces){
+			piece.endTurn();
+		}
+		
+		PlayerStatus newStatus;
+		
+		if(this.status == PlayerStatus.PLAYING){
+			newStatus = PlayerStatus.WAITING;
+		}else{
+			newStatus = PlayerStatus.PLAYING;
+		}
+		
+		notifyObservers(new PlayerModification(PlayerModificationType.STATUS_CHANGE, newStatus ));
+		
+		this.status = newStatus;
 	}
 
 	public PlayerStatus getStatus() {
-		// TODO Auto-generated method stub
-		return null;
+		return status;
 	}
 
 	/**
@@ -56,32 +117,49 @@ public final class Player extends Observable implements GameData {
 	}
 
 	public void init(List<Piece> ownedPieces) {
-		// TODO
+		pieces = ownedPieces;
 	}
 
 	public List<Piece> findOnBoardPieces() {
-		// TODO
-		return null;
+		
+		List<Piece> onBoardPieces = new ArrayList<Piece>();
+		
+		for(Piece piece : pieces){
+			if(piece.getPosition() != null){
+				onBoardPieces.add(piece);
+			}
+		}
+		return onBoardPieces;
 	}
 
 	public List<Piece> findOffBoardPieces() {
-		// TODO
-		return null;
+		
+		List<Piece> offBoardPieces = new ArrayList<Piece>();
+		
+		for(Piece piece : pieces){
+			if(piece.getPosition() == null){
+				offBoardPieces.add(piece);
+			}
+		}
+		return offBoardPieces;
 	}
 
 	public void win() {
-		// TODO Auto-generated method stub
-
+		PlayerStatus newStatus = PlayerStatus.VICTORY;
+		notifyObservers(new PlayerModification(PlayerModificationType.STATUS_CHANGE, newStatus ));
+		this.status = newStatus;
 	}
 
 	public void loose() {
-		// TODO Auto-generated method stub
-
+		PlayerStatus newStatus = PlayerStatus.LOSS;
+		notifyObservers(new PlayerModification(PlayerModificationType.STATUS_CHANGE, newStatus ));
+		this.status = newStatus;
 	}
 
 	public void draw() {
-		// TODO Auto-generated method stub
-
+		PlayerStatus newStatus = PlayerStatus.DRAW;
+		notifyObservers(new PlayerModification(PlayerModificationType.STATUS_CHANGE, newStatus ));
+		this.status = newStatus;
 	}
 
 }

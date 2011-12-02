@@ -2,6 +2,7 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
 import data.Board;
 import data.Coordinates;
@@ -85,6 +86,15 @@ public abstract class Game {
 		}
 
 		return specificEndTurn(actor);
+	}
+	
+	public void addObservers(Observer obs){
+		
+		for(Player player : players){
+			player.addObserver(obs);
+		}
+		
+		board.addObserver(obs);
 	}
 
 	abstract protected void init();

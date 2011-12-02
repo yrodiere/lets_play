@@ -29,7 +29,7 @@ public class Game extends logic.Game {
 	}
 
 	@Override
-	public SelectionReturnCode specificSelect(Player actor, Coordinates location) {
+	protected SelectionReturnCode specificSelect(Player actor, Coordinates location) {
 		Tile selectedTile = board.findTileAt(location);
 		
 		if( selectedPiece.tryMove( selectedTile.getCoordinates() ) ){

@@ -1,5 +1,7 @@
 package data;
 
+import java.util.Observer;
+
 //TODO
 public class Board implements GameData {
 
@@ -18,6 +20,11 @@ public class Board implements GameData {
 	public Tile findTileAt(Coordinates coords){
 		// TODO
 		return null;
+	}
+
+	public void addObserver(Observer obs) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
