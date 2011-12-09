@@ -59,7 +59,7 @@ public abstract class Game {
 	 *            Coordinates where the player acted on.
 	 * @return code specifying the result of the select attempt.
 	 */
-	public SelectionReturnCode select(Player actor, Coordinates location) {
+	public SelectionReturnCode select(Player actor, Coordinates location) {		
 
 		if (actor.getStatus() != PlayerStatus.PLAYING) {
 			return SelectionReturnCode.NOT_PLAYING;
@@ -86,7 +86,7 @@ public abstract class Game {
 		return specificEndTurn(actor);
 	}
 
-	public void addObservers(Observer obs) {
+	public void addObserver(Observer obs) {
 
 		for (Player player : players) {
 			player.addObserver(obs);

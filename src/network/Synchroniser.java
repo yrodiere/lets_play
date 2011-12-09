@@ -13,6 +13,7 @@ import data.Coordinates.DirectionOnBoard;
 import data.GameObserver;
 import data.Piece;
 import data.Piece.PieceModification;
+import data.Piece.PieceModificationType;
 import data.Player;
 import data.Player.PlayerModification;
 import data.Tile;
@@ -28,12 +29,14 @@ public class Synchroniser extends GameObserver {
 
 	private List<IdentifiedModification> pendingModification;
 
-	public Synchroniser(Board board, List<Player> players, NetworkCommunicator networkCommuncator) {
+	public Synchroniser(Board board, List<Player> players, NetworkCommunicator networkCommunicator) {
 		
 		this.board = board;
 		this.players = players;
-		this.networkCommunicator = networkCommuncator;
+		this.networkCommunicator = networkCommunicator;
 		this.pendingModification = new ArrayList<IdentifiedModification>();
+		
+		this.networkCommunicator.setSynchronizer(this);
 	}
 
 	public void handleRemotePieceNotification(Coordinates identifier,
@@ -74,8 +77,12 @@ public class Synchroniser extends GameObserver {
 
 	@Override
 	protected void update(Piece modifiedPiece, PieceModification modification) {
+		
+		if(modification.getType() == PieceModificationType.INITIALISATION)		
+			return;
+		
 		IdentifiedPieceModification modif = new IdentifiedPieceModification(
-				modifiedPiece.getCoordinates(), modification);
+				modifiedPiece.getCoordinates(), modification);		
 		
 		pendingModification.add(modif);
 	}
@@ -86,7 +93,8 @@ public class Synchroniser extends GameObserver {
 	}
 
 	@Override
-	protected void update(Player modifiedPlayer, PlayerModification modification) {
+	protected void update(Player modifiedPlayer, PlayerModification modification) {		
+	
 		switch(modification.getType()){
 			case TURN_RESET:
 				pendingModification.clear();
@@ -94,6 +102,7 @@ public class Synchroniser extends GameObserver {
 			case STATUS_CHANGE:
 				break;
 			case INITIALISATION:
+				return;
 		}
 		
 		IdentifiedPlayerModification modif = new IdentifiedPlayerModification(

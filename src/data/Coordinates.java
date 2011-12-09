@@ -113,4 +113,11 @@ public class Coordinates implements Serializable {
 		hash = hash * 31 + column;
 		return hash;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder("(");
+		builder.append(row).append(',').append(column).append(')');
+		return builder.toString();
+	}
 }

@@ -18,7 +18,6 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 
 	private boolean hasMovedThisTurn;
 	private boolean hasCapturedThisTurn;
-	private boolean canMove;
 
 	public MoveStrategy(Piece controlledPiece, Board board, Rules rules) {
 		super(controlledPiece, board, rules, new MoveStrategyFactory(board,
@@ -45,7 +44,6 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 	private void onTurnBeginning() {
 		hasMovedThisTurn = false;
 		hasCapturedThisTurn = false;
-		canMove = false;
 	}
 
 	@Override
@@ -72,8 +70,10 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 	 * @param maxMove
 	 *            The maximum number of moves ; maxMove <= 0 won't do anything.
 	 */
-	protected void setReachablesNoCaptureTowards(DirectionOnBoard direction,
-			int maxMove) {
+	protected boolean setReachablesNoCaptureTowards(DirectionOnBoard direction,
+			int maxMove, boolean markThem) {
+		boolean foundAtLeastOne = false;
+
 		if (!hasMovedThisTurn) {
 			int moveCount = 0;
 			// We must stop just before a tile with a piece was reached.
@@ -88,10 +88,14 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 			while (moveCount < maxMove && it.hasNext()) {
 				Tile currentTile = it.next();
 				++moveCount;
-				setReachable(currentTile, true);
-				canMove = true;
+				if (markThem) {
+					setReachable(currentTile, true);
+				}
+				foundAtLeastOne = true;
 			}
 		}
+
+		return foundAtLeastOne;
 	}
 
 	/**
@@ -106,8 +110,11 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 	 *            The maximum number of moves before the effective capture ;
 	 *            maxMoveBeforeCapture <= 0 won't do anything.
 	 */
-	protected void setReachableWithCaptureTowards(DirectionOnBoard direction,
-			int maxMoveBeforeCapture) {
+	protected boolean setReachableWithCaptureTowards(
+			DirectionOnBoard direction, int maxMoveBeforeCapture,
+			boolean markThem) {
+		boolean foundAtLeastOne = false;
+
 		if (!hasMovedThisTurn || hasCapturedThisTurn) {
 			int moveCount = 0;
 			Tile lastTile = null;
@@ -128,16 +135,32 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 							controlledPiece.getPlayer())
 					&& !lastPiece.getOffBoardFlag()) {
 				// A piece has been found, and it can be captured provided
-				// there is some space to “land” in
+				// there is some space to "land in"
 				if (it.hasNext()) {
 					lastTile = it.next();
 					if (lastTile.isEmpty()) {
-						setReachable(lastTile, true);
-						canMove = true;
+						if (markThem) {
+							setReachable(lastTile, true);
+						}
+						foundAtLeastOne = true;
 					}
 				}
 			}
 		}
+
+		return foundAtLeastOne;
+	}
+
+	protected abstract boolean scanReachables(boolean markThem);
+
+	@Override
+	public boolean select() {
+		return scanReachables(true);
+	}
+
+	@Override
+	public boolean canMove() {
+		return scanReachables(false);
 	}
 
 	@Override
@@ -189,11 +212,6 @@ abstract class MoveStrategy extends logic.MoveStrategy {
 				hasCapturedThisTurn = true;
 			}
 		}
-	}
-
-	@Override
-	public boolean canMove() {
-		return canMove;
 	}
 
 }

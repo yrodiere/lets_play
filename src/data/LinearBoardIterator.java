@@ -31,14 +31,15 @@ public class LinearBoardIterator implements Iterator<Tile> {
 		}
 
 		this.board = board;
-		this.lastTile = initialTile;
+		this.nextTile = initialTile;
 		this.direction = direction;
 		setNext();
 	}
 
 	protected void setNext() {
-		Coordinates nextCoord = lastTile.getCoordinates().translationTowards(
+		Coordinates nextCoord = nextTile.getCoordinates().translationTowards(
 				direction);
+		lastTile = nextTile;
 		nextTile = board.findTileAt(nextCoord);
 	}
 

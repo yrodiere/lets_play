@@ -22,7 +22,7 @@ class MoveStrategy extends logic.MoveStrategy {
 	@Override
 	public boolean tryMove(Coordinates target) {
 		Tile targetTile = board.findTileAt(target);
-		if (!canMove() || targetTile == null) {
+		if (!canMove() || targetTile == null || !targetTile.isEmpty()) {
 			return false;
 		} else {
 			movePiece(controlledPiece, targetTile);

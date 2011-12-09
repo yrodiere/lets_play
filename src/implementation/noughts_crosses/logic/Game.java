@@ -55,11 +55,12 @@ public class Game extends logic.Game {
 
 		boolean boardFull = true;
 
-		for (List<Tile> ligne : everyPossibleLine) {
+		for (List<Tile> line : everyPossibleLine) {
 
 			int nbActorPiecesAligned = 0;
 
-			for (Tile tile : ligne) {
+			for (Tile tile : line) {
+				
 				Piece piece = tile.getPiece();
 
 				if (piece == null) {
@@ -92,6 +93,16 @@ public class Game extends logic.Game {
 	@Override
 	protected void init() {
 		Rules myRules = (Rules) rules;
+		
+		Player player1, player2;
+		
+		if (players.get(0).getBoardSide() == DirectionOnBoard.DOWN) {
+			player1 = players.get(0);
+			player2 = players.get(1);
+		} else {
+			player1 = players.get(1);
+			player2 = players.get(0);
+		}
 
 		int nbTiles = myRules.getBoardRowCount()
 				* myRules.getBoardColumnCount();
@@ -100,17 +111,18 @@ public class Game extends logic.Game {
 
 		List<Piece> player2Pieces = new ArrayList<Piece>();
 
-		for (int i = 0; i < nbTiles; i++) {
-			if (i % 2 == 0) {
-				Piece piece = initPiece(players.get(0));
-				player1Pieces.add(piece);
-			} else {
-				Piece piece = initPiece(players.get(1));
-				player2Pieces.add(piece);
-			}
-		}
+		for (int i = 0; i < (nbTiles/2 + 2); i++) {
+				Piece piece1 = initPiece(player1);
+				player1Pieces.add(piece1);
 
-		selectedPiece = player1Pieces.get(0);
+				Piece piece2 = initPiece(player2);
+				player2Pieces.add(piece2);
+		}		
+		
+		player1.init(player1Pieces);
+		player2.init(player2Pieces);
+
+		selectedPiece = player2Pieces.get(0);
 
 		for (int r = 0; r < myRules.getBoardRowCount(); r++) {
 
@@ -133,14 +145,11 @@ public class Game extends logic.Game {
 		Coordinates coords2 = new Coordinates(0,
 				myRules.getBoardColumnCount() - 1);
 
-		diagLigne1.add(board.findTileAt(coords1));
-		diagLigne2.add(board.findTileAt(coords2));
-
 		for (int r = 0; r < myRules.getBoardRowCount(); r++) {
-			diagLigne1.add(board.findTileAt(coords1
-					.translationTowards(DirectionOnBoard.UP_RIGHT)));
-			diagLigne2.add(board.findTileAt(coords2
-					.translationTowards(DirectionOnBoard.UP_LEFT)));
+			diagLigne1.add(board.findTileAt(coords1));
+			diagLigne2.add(board.findTileAt(coords2));
+			coords1 = coords1.translationTowards(DirectionOnBoard.UP_RIGHT);
+			coords2 = coords2.translationTowards(DirectionOnBoard.UP_LEFT);
 		}
 
 		everyPossibleLine.add(diagLigne1);

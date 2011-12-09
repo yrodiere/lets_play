@@ -2,6 +2,7 @@ package implementation.draughts.logic;
 
 import implementation.draughts.PieceType;
 import data.Board;
+import data.Coordinates.DirectionOnBoard;
 import data.Piece;
 
 final class ManMoveStrategy extends MoveStrategy {
@@ -12,17 +13,23 @@ final class ManMoveStrategy extends MoveStrategy {
 	}
 
 	@Override
-	public boolean select() {
-		setReachablesNoCaptureTowards(FORWARD_LEFT, 1);
-		setReachableWithCaptureTowards(FORWARD_LEFT, 1);
-		setReachablesNoCaptureTowards(FORWARD_RIGHT, 1);
-		setReachableWithCaptureTowards(FORWARD_RIGHT, 1);
+	protected boolean scanReachables(boolean markThem) {
+		boolean foundAtLeastOne = false;
+		for (DirectionOnBoard direction : new DirectionOnBoard[] {
+				FORWARD_LEFT, FORWARD_RIGHT }) {
+			foundAtLeastOne = setReachablesNoCaptureTowards(direction, 1,
+					markThem) || foundAtLeastOne;
+			foundAtLeastOne = setReachableWithCaptureTowards(direction, 1,
+					markThem) || foundAtLeastOne;
+		}
 
 		// TODO: handle custom rules
-		setReachableWithCaptureTowards(BACKWARD_RIGHT, 1);
-		setReachableWithCaptureTowards(BACKWARD_LEFT, 1);
+		foundAtLeastOne = setReachableWithCaptureTowards(BACKWARD_RIGHT, 1,
+				markThem) || foundAtLeastOne;
+		foundAtLeastOne = setReachableWithCaptureTowards(BACKWARD_LEFT, 1,
+				markThem) || foundAtLeastOne;
 
-		return canMove();
+		return foundAtLeastOne;
 	}
 
 	@Override

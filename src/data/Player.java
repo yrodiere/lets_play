@@ -78,7 +78,7 @@ public final class Player extends Observable implements GameData {
 		for (Piece piece : pieces) {
 			piece.resetTurn();
 		}
-
+		setChanged();
 		notifyObservers(new PlayerModification(
 				PlayerModificationType.TURN_RESET, this.status));
 	}
@@ -96,7 +96,7 @@ public final class Player extends Observable implements GameData {
 		} else {
 			newStatus = PlayerStatus.PLAYING;
 		}
-
+		setChanged();
 		notifyObservers(new PlayerModification(
 				PlayerModificationType.STATUS_CHANGE, newStatus));
 
@@ -148,6 +148,7 @@ public final class Player extends Observable implements GameData {
 
 	public void win() {
 		PlayerStatus newStatus = PlayerStatus.VICTORY;
+		setChanged();
 		notifyObservers(new PlayerModification(
 				PlayerModificationType.STATUS_CHANGE, newStatus));
 		this.status = newStatus;
@@ -155,6 +156,7 @@ public final class Player extends Observable implements GameData {
 
 	public void loose() {
 		PlayerStatus newStatus = PlayerStatus.LOSS;
+		setChanged();
 		notifyObservers(new PlayerModification(
 				PlayerModificationType.STATUS_CHANGE, newStatus));
 		this.status = newStatus;
@@ -162,6 +164,7 @@ public final class Player extends Observable implements GameData {
 
 	public void draw() {
 		PlayerStatus newStatus = PlayerStatus.DRAW;
+		setChanged();
 		notifyObservers(new PlayerModification(
 				PlayerModificationType.STATUS_CHANGE, newStatus));
 		this.status = newStatus;

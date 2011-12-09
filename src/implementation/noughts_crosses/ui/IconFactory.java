@@ -1,6 +1,11 @@
 package implementation.noughts_crosses.ui;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
+
+import ui.PieceViewDescription;
+import ui.TileViewDescription;
 
 import implementation.noughts_crosses.PieceType;
 import data.Piece;
@@ -10,15 +15,15 @@ import data.Tile;
 public class IconFactory extends ui.IconFactory {
 
 	@Override
-	public Icon createTileIcon(Tile model) {
-		return createImageIcon("/noughts_crosses/tile.png");
+	public TileViewDescription createTileViewDescription(Tile model, boolean reachable, boolean selected) {
+		return new TileViewDescription(Color.WHITE, Color.BLACK, 1);
 	}
 
 	@Override
-	public final Icon createPieceIcon(Piece model, int typeHashCode) {
+	public final PieceViewDescription createPieceViewDescription(Piece model, int typeHashCode) {
 		switch (PieceType.fromHash(typeHashCode)) {
 		case MAIN:
-			return createPieceIcon(model.getPlayer());
+			return new PieceViewDescription(createPieceIcon(model.getPlayer()));
 		default:
 			throw new IllegalArgumentException(
 					"PieceType corresponding to typeHashCode is unknown");
