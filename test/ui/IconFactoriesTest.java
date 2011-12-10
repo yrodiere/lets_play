@@ -2,8 +2,6 @@ package ui;
 
 import static org.junit.Assert.*;
 
-import javax.swing.Icon;
-
 import org.junit.Test;
 
 import data.Coordinates;
@@ -21,10 +19,9 @@ public class IconFactoriesTest {
 				new Tile(new Coordinates(5, 7)) };
 
 		for (Tile tile : tileModels) {
-			Icon icon = factory.createTileIcon(tile);
-			assertNotNull(icon);
-			assertTrue(icon.getIconHeight() > 0);
-			assertTrue(icon.getIconWidth() > 0);
+			TileViewDescription desc = factory.createTileViewDescription(tile);
+			assertNotNull(desc);
+			assertTrue(desc.getBorderWidth() >= 0);
 		}
 
 		// TODO: test piece icons (much more complex)
@@ -40,10 +37,9 @@ public class IconFactoriesTest {
 				new Tile(new Coordinates(5, 7)) };
 
 		for (Tile tile : tileModels) {
-			Icon icon = factory.createTileIcon(tile);
-			assertNotNull(icon);
-			assertTrue(icon.getIconHeight() > 0);
-			assertTrue(icon.getIconWidth() > 0);
+			TileViewDescription desc = factory.createTileViewDescription(tile);
+			assertNotNull(desc);
+			assertTrue(desc.getBorderWidth() >= 0);
 		}
 
 		// TODO: test piece icons (much more complex)
