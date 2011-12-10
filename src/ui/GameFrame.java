@@ -6,7 +6,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -29,7 +28,6 @@ public class GameFrame extends JFrame {
 
 	private static final Dimension BOARD_SIZE = new Dimension(500, 500);
 	private final Game game;
-	private final Rules rules;
 	private final IconFactory iconFactory;
 	private final Player actor;
 
@@ -46,7 +44,6 @@ public class GameFrame extends JFrame {
 		}
 
 		this.game = game;
-		this.rules = rules;
 		this.iconFactory = iconFactory;
 		this.actor = actor;
 

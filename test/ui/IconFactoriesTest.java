@@ -19,7 +19,8 @@ public class IconFactoriesTest {
 				new Tile(new Coordinates(5, 7)) };
 
 		for (Tile tile : tileModels) {
-			TileViewDescription desc = factory.createTileViewDescription(tile);
+			TileViewDescription desc = factory.createTileViewDescription(tile,
+					tile.isReachable(), tile.isSelected());
 			assertNotNull(desc);
 			assertTrue(desc.getBorderWidth() >= 0);
 		}
@@ -37,7 +38,8 @@ public class IconFactoriesTest {
 				new Tile(new Coordinates(5, 7)) };
 
 		for (Tile tile : tileModels) {
-			TileViewDescription desc = factory.createTileViewDescription(tile);
+			TileViewDescription desc = factory.createTileViewDescription(tile,
+					tile.isReachable(), tile.isSelected());
 			assertNotNull(desc);
 			assertTrue(desc.getBorderWidth() >= 0);
 		}
