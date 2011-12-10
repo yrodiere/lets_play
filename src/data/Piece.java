@@ -88,12 +88,12 @@ public final class Piece extends Observable implements GameData {
 			notifyObservers(new PieceModification(
 					PieceModificationType.TURN_RESET,
 					lastPosition.getCoordinates(), getTypeHashCode()));
+			if(position != null)
+				position.setPiece(null);
+			position = lastPosition;
+			if(position != null)
+				position.setPiece(this);
 		}
-		if(position != null)
-			position.setPiece(null);
-		if(lastPosition != null)
-			lastPosition.setPiece(this);
-		position = lastPosition;
 		offBoardFlag = false;
 	}
 
