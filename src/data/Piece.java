@@ -84,10 +84,15 @@ public final class Piece extends Observable implements GameData {
 	public void resetTurn() {
 		strategy.resetTurn();
 		if (position != lastPosition) {
+			setChanged();
 			notifyObservers(new PieceModification(
 					PieceModificationType.TURN_RESET,
 					lastPosition.getCoordinates(), getTypeHashCode()));
 		}
+		if(position != null)
+			position.setPiece(null);
+		if(lastPosition != null)
+			lastPosition.setPiece(this);
 		position = lastPosition;
 		offBoardFlag = false;
 	}
@@ -105,7 +110,13 @@ public final class Piece extends Observable implements GameData {
 	 * @see {@link MoveStrategy#select()}
 	 */
 	public boolean select() {
-		return strategy.select();
+		if(strategy.select()){
+			if(position != null)
+				position.setSelected(true);
+			
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -124,6 +135,7 @@ public final class Piece extends Observable implements GameData {
 
 	public void setMoveStrategy(MoveStrategy newStrategy) {
 		if (newStrategy != strategy) {
+			setChanged();
 			notifyObservers(new PieceModification(
 					PieceModificationType.CHANGED_STRATEGY, getCoordinates(),
 					newStrategy.getTypeHashCode()));
@@ -136,6 +148,8 @@ public final class Piece extends Observable implements GameData {
 	}
 
 	public Coordinates getCoordinates() {
+		if(position == null)
+			return null;
 		return position.getCoordinates();
 	}
 
@@ -151,29 +165,39 @@ public final class Piece extends Observable implements GameData {
 	 * @see {@link MoveStrategy#getTypeHashCode()}
 	 */
 	public int getTypeHashCode() {
+		if(strategy == null)
+			return -1;
 		return strategy.getTypeHashCode();
 	}
 
-	void setPosition(Tile newPosition) {
+	void setPosition(Tile newPosition) {		
 		if (newPosition != position) {
 			if (newPosition != null) {
+				setChanged();
 				notifyObservers(new PieceModification(
 						PieceModificationType.MOVED_ONBOARD,
 						newPosition.getCoordinates(), getTypeHashCode()));
-				position.setPiece(null);
+				
 			} else {
+				setChanged();
 				notifyObservers(new PieceModification(
 						PieceModificationType.MOVED_OFFBOARD, null,
 						getTypeHashCode()));
 			}
-
+			
+			if(position != null)
+				position.setPiece(null);
+			
 			position = newPosition;
-			position.setPiece(this);
+			
+			if(position != null)
+				position.setPiece(this);
 		}
 	}
 
 	void setOffBoardFlag() {
 		if (!offBoardFlag) {
+			setChanged();			
 			notifyObservers(new PieceModification(
 					PieceModificationType.FLAGGED_OFFBOARD, getCoordinates(),
 					getTypeHashCode()));

@@ -11,7 +11,7 @@ import data.Tile;
 import data.Coordinates.DirectionOnBoard;
 
 public class Game extends logic.Game {
-	Game(Rules myRules, Board myBoard, List<Player> myPlayers) throws Exception {
+	public Game(Rules myRules, Board myBoard, List<Player> myPlayers) throws Exception {
 		super(myRules, myBoard, myPlayers);
 
 		init();
@@ -37,7 +37,7 @@ public class Game extends logic.Game {
 
 				if (piece.select()) {
 					selectedPiece = piece;
-					return SelectionReturnCode.SUCCESS;
+					return SelectionReturnCode.MOVE_PENDING;
 				}
 			}
 
@@ -49,13 +49,15 @@ public class Game extends logic.Game {
 			}
 
 			if (selectedPiece.tryMove(selectedTile.getCoordinates())) {
+				
+				board.clearReachables();
 
 				if (selectedPiece.select()) {
 					// The piece can still move
 					return SelectionReturnCode.MOVE_PENDING;
 				} else {
 					// The piece cannot move anymore
-					currentPlayerHasPlayed = true;
+					currentPlayerHasPlayed = true;							
 					return SelectionReturnCode.SUCCESS;
 				}
 			}
@@ -75,12 +77,18 @@ public class Game extends logic.Game {
 		checkForPieceUpgrade(actor);
 
 		selectedPiece = null;
+		
+		board.endTurn();
+		
+		actor.endTurn();
 
-		Player otherPlayer = players.get(0);
+		Player otherPlayer = players.get(0);		
 
 		if (otherPlayer == actor) {
 			otherPlayer = players.get(1);
 		}
+		
+		otherPlayer.endTurn();
 
 		List<Piece> otherPlayerPieces = otherPlayer.findOnBoardPieces();
 
@@ -91,9 +99,7 @@ public class Game extends logic.Game {
 		}
 
 		for (Piece piece : otherPlayerPieces) {
-			if (piece.canMove()) {
-				actor.endTurn();
-				otherPlayer.endTurn();
+			if (piece.canMove()) {				
 				return EndTurnReturnCode.SUCCESS;
 			}
 		}
@@ -110,36 +116,38 @@ public class Game extends logic.Game {
 		List<Piece> player1Pieces = new ArrayList<Piece>();
 
 		List<Piece> player2Pieces = new ArrayList<Piece>();
+		
+		Player player1, player2;
+		
+		if (players.get(0).getBoardSide() == DirectionOnBoard.DOWN) {
+			player1 = players.get(0);
+			player2 = players.get(1);
+		} else {
+			player1 = players.get(1);
+			player2 = players.get(0);
+		}
 
 		for (int c = 0; c < myRules.getBoardColumnCount(); c++) {
 
 			for (int r = 0; r < myRules.getNbRowsOfPiece(); r++) {
 
-				Piece p1 = initPiece(players.get(0), r, c);
+				Piece p1 = initPiece(player1, r, c);
 
 				if (p1 != null) {
 					player1Pieces.add(p1);
 				}
 
-				Piece p2 = initPiece(players.get(1), myRules.getBoardRowCount()
-						- r, c);
+				Piece p2 = initPiece(player2, myRules.getBoardRowCount()
+						- r - 1, c);
 
-				if (p1 != null) {
+				if (p2 != null) {
 					player2Pieces.add(p2);
 				}
 			}
 		}
-
-		if (players.get(0).getBoardSide() == DirectionOnBoard.DOWN) {
-
-			players.get(0).init(player1Pieces);
-			players.get(1).init(player2Pieces);
-		} else {
-
-			players.get(1).init(player1Pieces);
-			players.get(0).init(player2Pieces);
-		}
-
+		
+		player1.init(player1Pieces);
+		player2.init(player2Pieces);
 	}
 
 	protected Piece initPiece(Player owner, int row, int column) {
@@ -165,8 +173,8 @@ public class Game extends logic.Game {
 	protected void checkForPieceUpgrade(Player actor) {
 		int lastRow = 0;
 
-		if (actor.getBoardSide() == DirectionOnBoard.UP) {
-			lastRow = rules.getBoardRowCount();
+		if (actor.getBoardSide() == DirectionOnBoard.DOWN) {
+			lastRow = rules.getBoardRowCount() - 1;
 		}
 
 		if (selectedPiece.getCoordinates().getRow() == lastRow) {

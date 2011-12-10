@@ -82,7 +82,8 @@ public final class Tile extends Observable implements GameData {
 				|| updateDescription.isNowSelected() == selected) {
 			return;
 		}
-
+		
+		setChanged();
 		notifyObservers(updateDescription);
 
 		switch (updateDescription.getType()) {
@@ -103,6 +104,7 @@ public final class Tile extends Observable implements GameData {
 	@Override
 	public void resetTurn() {
 		if (reachable || selected) {
+			setChanged();
 			notifyObservers(new TileModification(
 					TileModificationType.TURN_RESET, this.piece, false, false));
 			selected = false;
@@ -113,6 +115,7 @@ public final class Tile extends Observable implements GameData {
 	@Override
 	public void endTurn() {
 		if (reachable || selected) {
+			setChanged();
 			notifyObservers(new TileModification(
 					TileModificationType.FLAGS_CHANGED, this.piece, false,
 					false));
@@ -166,7 +169,8 @@ public final class Tile extends Observable implements GameData {
 
 	void setPiece(Piece newPiece) {
 		assert (isEmpty());
-		if (newPiece != null) {
+		if (newPiece != piece) {
+			setChanged();
 			notifyObservers(new TileModification(
 					TileModificationType.PIECE_CHANGED, newPiece, reachable,
 					selected));
@@ -176,6 +180,7 @@ public final class Tile extends Observable implements GameData {
 
 	void setSelected(boolean selected) {
 		if (this.selected != selected) {
+			setChanged();
 			notifyObservers(new TileModification(
 					TileModificationType.FLAGS_CHANGED, this.piece,
 					this.reachable, selected));
@@ -185,6 +190,7 @@ public final class Tile extends Observable implements GameData {
 
 	void setReachable(boolean reachable) {
 		if (this.reachable != reachable) {
+			setChanged();
 			notifyObservers(new TileModification(
 					TileModificationType.FLAGS_CHANGED, this.piece, reachable,
 					this.selected));

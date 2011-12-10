@@ -27,6 +27,12 @@ public class Board implements GameData {
 			entry.getValue().resetTurn();
 		}
 	}
+	
+	public void clearReachables() {
+		for (Map.Entry<Coordinates, Tile> entry : tiles.entrySet()) {
+			entry.getValue().setReachable(false);
+		}
+	}
 
 	@Override
 	public void endTurn() {

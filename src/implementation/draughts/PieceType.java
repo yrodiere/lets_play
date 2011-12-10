@@ -9,7 +9,7 @@ public enum PieceType {
 		} else if (typeHashCode == KING.hashCode()) {
 			return KING;
 		} else {
-			throw new IllegalArgumentException("typeHashCode is invalid");
+			throw new IllegalArgumentException("typeHashCode is invalid : " + typeHashCode);
 		}
 	}
 }

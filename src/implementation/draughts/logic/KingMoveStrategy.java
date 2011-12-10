@@ -13,15 +13,16 @@ final class KingMoveStrategy extends MoveStrategy {
 	}
 
 	@Override
-	public boolean select() {
+	protected boolean scanReachables(boolean markThem) {
+		boolean foundAtLeastOne = false;
 		// TODO: handle custom rules
 		for (DirectionOnBoard direction : new DirectionOnBoard[] {
 				FORWARD_RIGHT, BACKWARD_RIGHT, BACKWARD_LEFT, FORWARD_LEFT }) {
-			setReachablesNoCaptureTowards(direction, Integer.MAX_VALUE);
-			setReachableWithCaptureTowards(direction, Integer.MAX_VALUE);
+			foundAtLeastOne = setReachablesNoCaptureTowards(direction, Integer.MAX_VALUE, markThem)|| foundAtLeastOne;
+			foundAtLeastOne = setReachableWithCaptureTowards(direction, Integer.MAX_VALUE, markThem)|| foundAtLeastOne;
 		}
 
-		return canMove();
+		return foundAtLeastOne;
 	}
 
 	@Override

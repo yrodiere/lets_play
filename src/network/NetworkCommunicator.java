@@ -4,10 +4,14 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
+
+import logic.Rules;
 
 import data.Coordinates;
 import data.Coordinates.DirectionOnBoard;
@@ -105,6 +109,55 @@ public class NetworkCommunicator {
 			return modification;
 		}
 	}
+	
+	public static final class ConnectToReturn implements Serializable{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -1372587827073256727L;
+		
+		private final Rules rules;
+		private final HashMap<DirectionOnBoard,String> remotePlayers;		
+		private final DirectionOnBoard nextDoBAvailable;
+		
+		public ConnectToReturn(Rules rules, HashMap<DirectionOnBoard, String> remotePlayers, DirectionOnBoard nextDoBAvailable) {
+			super();
+			this.rules = rules;
+			this.remotePlayers = remotePlayers;
+			this.nextDoBAvailable = nextDoBAvailable;
+		}
+
+		public Rules getRules() {
+			return rules;
+		}
+		
+		public HashMap<DirectionOnBoard, String> getRemotePlayers() {
+			return remotePlayers;
+		}
+
+		public DirectionOnBoard getNextDoBAvailable() {
+			return nextDoBAvailable;
+		}				
+	}
+	
+	public static final class WaitForConnectionReturn implements Serializable{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2528922586421883747L;
+	
+		private final String newPlayerName;
+		
+		public WaitForConnectionReturn(String newPlayerName) {
+			super();
+			this.newPlayerName = newPlayerName;
+
+		}
+
+		public String getNewPlayerName() {
+			return newPlayerName;
+		}
+	}
 
 	private int port;
 
@@ -119,29 +172,71 @@ public class NetworkCommunicator {
 		this.reader = new NetworkReader();
 	}
 
-	public boolean waitForConnection() {
+	public WaitForConnectionReturn waitForConnection(Rules rules, HashMap<DirectionOnBoard,String> players, DirectionOnBoard nextDoBAvailable) {
+		
+		WaitForConnectionReturn waitForConnectionReturn = null;
+		
 		try {
 			ServerSocket ss = new ServerSocket(port);
 			socket = ss.accept();
+			
+			OutputStream os = socket.getOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(os);
+
+			oos.writeObject(new ConnectToReturn(rules, players,nextDoBAvailable));
+
+			oos.close();
+			os.close();		
+			
+			InputStream is = socket.getInputStream();
+			ObjectInputStream ois = new ObjectInputStream(is);
+
+			waitForConnectionReturn = (WaitForConnectionReturn) ois.readObject();
+
+			ois.close();
+			is.close();
+			
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
 
 		reader.start();
 
-		return true;
+		return waitForConnectionReturn;
 	}
 
-	public boolean connectTo(InetAddress adress) {
+	public ConnectToReturn connectTo(InetAddress address, String playerName) {
+		
+		ConnectToReturn connectToReturn = null;
+		
 		try {
-			socket = new Socket(adress, port);
+			socket = new Socket(address, port);
+			
+			InputStream is = socket.getInputStream();
+			ObjectInputStream ois = new ObjectInputStream(is);
+
+			connectToReturn = (ConnectToReturn) ois.readObject();
+
+			ois.close();
+			is.close();
+			
+			ServerSocket ss = new ServerSocket(port);
+			socket = ss.accept();
+			
+			OutputStream os = socket.getOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(os);
+
+			oos.writeObject(new WaitForConnectionReturn(playerName));
+
+			oos.close();
+			os.close();		
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
 
 		reader.start();
 
-		return true;
+		return connectToReturn;
 	}
 
 	public boolean notifyModification(
@@ -161,5 +256,7 @@ public class NetworkCommunicator {
 		return true;
 	}
 	
-
+	public void setSynchronizer(Synchroniser synchroniser){
+		this.synchroniser = synchroniser;
+	}
 }

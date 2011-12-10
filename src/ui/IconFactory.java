@@ -10,13 +10,10 @@ import data.Piece;
 import data.Tile;
 
 public abstract class IconFactory {
-	public final Icon createPieceIcon(Piece model) {
-		return createPieceIcon(model, model.getTypeHashCode());
-	}
+	public abstract PieceViewDescription createPieceViewDescription(
+			Piece model, int newTypeHashCode);
 
-	public abstract Icon createPieceIcon(Piece model, int newTypeHashCode);
-
-	public abstract Icon createTileIcon(Tile model);
+	public abstract TileViewDescription createTileViewDescription(Tile model, boolean reachable, boolean selected);
 
 	protected final Icon createImageIcon(String path) {
 		URL url = getClass().getResource(path);
